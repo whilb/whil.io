@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/whil
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://whil.io
+  * I am whil (https://keybase.io/whil) on keybase.
+  * I have a public key ASAB_Apup5vbBIDRPF6U3mDDR3UtKk-gYPZ0X4YZQTAhSgo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "0120a0fde226ec88639d6cbdb6668206acbf714493517c6379216ec5a4c86df71f270a",
+      "host": "keybase.io",
+      "kid": "012001fc0a6ea79bdb0480d13c5e94de60c347752d2a4fa060f6745f86194130214a0a",
+      "uid": "f037578e00aebc82d7ed47b23e5f4619",
+      "username": "whil"
+    },
+    "merkle_root": {
+      "ctime": 1606799596,
+      "hash": "2d1f035183f00a0a23ffb0240ede69168f782ea25578b95ff1e4fcc4987b168627213dafa8d0db29874d038d03e00ad3f8beaf7102d04e58ae940ebb5fcc40c4",
+      "hash_meta": "7cea60e563cdb69bc80585c2ee8cffa67933bfbfefb632464ecf874ae28b0707",
+      "seqno": 18273497
+    },
+    "service": {
+      "entropy": "xFki5xJVF/wTGr1aPgIUIPvK",
+      "hostname": "whil.io",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "5.5.2"
+  },
+  "ctime": 1606799623,
+  "expire_in": 504576000,
+  "prev": "c4a73e513d1130b677bdbb58d697aa47988635a7415f09af090b6877a8b9aa3b",
+  "seqno": 18,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgAfwKbqeb2wSA0TxelN5gw0d1LSpPoGD2dF+GGUEwIUoKp3BheWxvYWTESpcCEsQgxKc+UT0RMLZ3vbtY1peqR5iGNadBXwmvCQtod6i5qjvEIPqgB4rP61KxCfuHxI37vIbZOyPkUBXPeU6ufTOiPlYxAgHCo3NpZ8RAQ+P1G3v/nYdEgkG1S1sGpE+7EYjtw7OeUhkq+D2/xo1joseVtm/rPm8dF1kAtqwNwKirvGCm6nZxJTqwjpEEA6hzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIGZfARp3kSAMhYGbc9h6C1nFhZ/r+PD7bp78r5lVtsy3o3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/whil
+
+==================================================================

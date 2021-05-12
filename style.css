@@ -1,0 +1,90 @@
+.var-highlight {
+  color: #c0ad60;
+}
+.string-highlight {
+  color: rgba(0, 255, 0, 0.8);
+}
+
+.center {
+  width: 70%;
+  margin: auto;
+  padding: 10px;
+}
+
+body {
+  padding: 40px;
+  background-color: #121212;
+
+  font-size: 2em;
+  border-right: solid 3px rgba(0, 255, 0, 0.75);
+  font-family: "Source Code Pro", monospace;
+  font-size: 28px;
+  color: lightgrey;
+  margin: 0 auto;
+}
+
+pre {
+  overflow-x: auto;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+#typewriter {
+  &:after {
+    content: "|";
+    animation: blink 500ms linear infinite alternate;
+  }
+}
+
+a {
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+a:link {
+  color: #ccffcc;
+}
+
+a:visited {
+  color: grey;
+}
+
+a:hover {
+  color: #ccffff;
+}
+
+a:active {
+  color: #ccffcc;
+}
+
+
+
+@-webkit-keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
