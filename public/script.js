@@ -7,7 +7,7 @@ function setupTypewriter(t) {
 		tag = "",
 		writingTag = false,
 		tagOpen = false,
-		typeSpeed = 25,
+		typeSpeed = 10,
 		tempTypeSpeed = 0;
 
 	var type = function() {
@@ -36,12 +36,12 @@ function setupTypewriter(t) {
 				tempTypeSpeed = 0;
 			}
 			else {
-				tempTypeSpeed = (Math.random() * typeSpeed) + 50;
+				tempTypeSpeed = (Math.random() * typeSpeed) + 5;
 			}
 			t.innerHTML += HTML[cursorPosition];
 		}
 		if (writingTag === true && HTML[cursorPosition] === ">") {
-			tempTypeSpeed = (Math.random() * typeSpeed) + 50;
+			tempTypeSpeed = (Math.random() * typeSpeed) + 5;
 			writingTag = false;
 			if (tagOpen) {
 				var newSpan = document.createElement("span");
@@ -63,18 +63,7 @@ function setupTypewriter(t) {
 	};
 }
 
-function file_get_contents(filename) {
-	v = fetch(filename).then((resp) => resp.text());
-	return v;
-}
-
 var typer = document.getElementById('typewriter');
 
-typewriter = setupTypewriter(typewriter);
-
+typewriter = setupTypewriter(typer);
 typewriter.type();
-v = fetch("uptime")
-	.then( response => response.text() )
-	.then( function putUp(txt) {
-		document.getElementById("uplined").innerHTML = txt;
-	} );
