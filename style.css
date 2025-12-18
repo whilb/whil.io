@@ -11,6 +11,25 @@
   padding: 10px;
 }
 
+.ascii-wrap {
+        display: flex;
+        justify-content: center;
+}
+
+.ascii {
+        /* never wrap the art */
+        white-space: pre;
+        margin: 0;
+        overflow-y: hidden;
+
+        /* responsive sizing: shrinks on narrow screens, caps at 12px */
+        font-size: clamp(7px, 2.2vw, 12px);
+        line-height: 1.1;
+
+        /* optional: improves “block” look */
+        font-variant-ligatures: none;
+}
+
 body {
   padding: 40px;
   background-color: #121212;
