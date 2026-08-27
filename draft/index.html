@@ -1,0 +1,1613 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="description" content="Draft board for a 14-team half-PPR league, ranked on projected points and week-to-week reliability.">
+</head>
+<body>
+<title>Whil's Draft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --ground:#F2F5F3; --surface:#FFFFFF; --surface2:#E7ECE9; --surface3:#DCE3DF;
+  --line:#CFD8D3; --line-soft:#E2E8E5;
+  --ink:#121A17; --ink2:#4C5A54; --ink3:#7C8981;
+  --accent:#9C5D18; --accent-ink:#7A4711; --accent-soft:#F2E3CE;
+  --good:#2C7A58; --good-soft:#D5E8DE;
+  --bad:#A63A31; --bad-soft:#F2DAD7;
+  --warn:#9A6B12;
+  --qb:#A9702A; --rb:#2C7A58; --wr:#2A6C99; --te:#87478A;
+  --shadow:0 1px 2px rgba(18,26,23,.06),0 4px 14px rgba(18,26,23,.05);
+  --r:7px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E1412; --surface:#161E1B; --surface2:#1D2724; --surface3:#26322E;
+    --line:#2B3833; --line-soft:#212C28;
+    --ink:#E9EFEB; --ink2:#A2AFA9; --ink3:#6F7D77;
+    --accent:#D6953E; --accent-ink:#E8B972; --accent-soft:#33240F;
+    --good:#4FA87E; --good-soft:#16301F;
+    --bad:#D2665B; --bad-soft:#361A19;
+    --warn:#D3A044;
+    --qb:#D39C55; --rb:#4FA87E; --wr:#5B9DCC; --te:#B379AF;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E1412; --surface:#161E1B; --surface2:#1D2724; --surface3:#26322E;
+  --line:#2B3833; --line-soft:#212C28;
+  --ink:#E9EFEB; --ink2:#A2AFA9; --ink3:#6F7D77;
+  --accent:#D6953E; --accent-ink:#E8B972; --accent-soft:#33240F;
+  --good:#4FA87E; --good-soft:#16301F;
+  --bad:#D2665B; --bad-soft:#361A19;
+  --warn:#D3A044;
+  --qb:#D39C55; --rb:#4FA87E; --wr:#5B9DCC; --te:#B379AF;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"Source Sans 3",ui-sans-serif,system-ui,sans-serif;
+  font-size:15px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.disp{font-family:Archivo,ui-sans-serif,system-ui,sans-serif;text-wrap:balance}
+.num{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+
+/* ---------- masthead ---------- */
+.top{
+  border-bottom:1px solid var(--line); background:var(--surface);
+  position:sticky; top:0; z-index:30;
+}
+.top-in{
+  max-width:1500px;margin:0 auto;padding:12px 20px;
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:baseline;gap:10px;margin-right:auto}
+.brand h1{
+  margin:0;font-size:20px;font-weight:800;letter-spacing:-.02em;
+}
+.brand .sub{
+  font-size:11px;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--ink3);font-weight:600;
+}
+.counter{display:flex;gap:16px;align-items:center}
+.cbox{text-align:right}
+.cbox .k{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3);font-weight:600}
+.cbox .v{font-size:17px;font-weight:700;letter-spacing:-.01em}
+
+/* ---------- shell ---------- */
+.shell{max-width:1500px;margin:0 auto;padding:18px 20px 80px;display:grid;
+  grid-template-columns:290px minmax(0,1fr);gap:22px;align-items:start}
+@media(max-width:960px){.shell{grid-template-columns:1fr}}
+
+.rail{position:sticky;top:70px;display:flex;flex-direction:column;gap:14px}
+@media(max-width:960px){.rail{position:static}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.card-h{
+  padding:10px 13px;border-bottom:1px solid var(--line-soft);
+  font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--ink2);
+  display:flex;justify-content:space-between;align-items:center;gap:8px;
+}
+.card-b{padding:13px}
+
+/* ---------- the dial ---------- */
+.dial-val{font-size:12.5px;color:var(--ink2);margin-bottom:9px;line-height:1.4}
+.dial-val b{color:var(--ink);font-weight:600}
+input[type=range]{
+  width:100%;-webkit-appearance:none;appearance:none;background:transparent;margin:5px 0 3px;
+}
+input[type=range]::-webkit-slider-runnable-track{
+  height:5px;border-radius:3px;background:linear-gradient(90deg,var(--wr),var(--surface3) 50%,var(--accent));
+}
+input[type=range]::-moz-range-track{
+  height:5px;border-radius:3px;background:linear-gradient(90deg,var(--wr),var(--surface3) 50%,var(--accent));
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:17px;height:17px;border-radius:50%;
+  background:var(--surface);border:2.5px solid var(--ink);margin-top:-6px;cursor:grab;
+}
+input[type=range]::-moz-range-thumb{
+  width:17px;height:17px;border-radius:50%;background:var(--surface);
+  border:2.5px solid var(--ink);cursor:grab;
+}
+.dial-ends{display:flex;justify-content:space-between;font-size:10px;
+  text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);font-weight:600}
+
+/* ---------- roster ---------- */
+.slot{
+  display:flex;align-items:center;gap:8px;padding:5px 0;
+  border-bottom:1px dashed var(--line-soft);font-size:13.5px;
+}
+.slot:last-child{border-bottom:0}
+.slot .lbl{
+  width:44px;flex:none;font-size:10px;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--ink3);
+}
+.slot .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.slot.empty .nm{color:var(--ink3);font-style:italic}
+.slot .drop{color:var(--ink3);font-size:15px;line-height:1;padding:0 3px;border-radius:3px}
+.slot .drop:hover{color:var(--bad)}
+
+/* ---------- scarcity ---------- */
+.scarce{display:flex;flex-direction:column;gap:7px}
+.sc-row{display:grid;grid-template-columns:30px 1fr 34px;gap:8px;align-items:center;font-size:12px}
+.sc-bar{height:6px;border-radius:3px;background:var(--surface3);overflow:hidden}
+.sc-fill{height:100%;border-radius:3px}
+.sc-n{text-align:right;color:var(--ink2);font-size:11.5px}
+
+/* ---------- filters ---------- */
+.seg{display:flex;gap:3px;background:var(--surface2);padding:3px;border-radius:6px}
+.seg button{
+  flex:1;padding:5px 0;font-size:11.5px;font-weight:600;border-radius:4px;
+  color:var(--ink2);letter-spacing:.02em;
+}
+.seg button[aria-pressed=true]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.search{
+  width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:6px;
+  background:var(--ground);color:var(--ink);font:inherit;font-size:13.5px;
+}
+.search::placeholder{color:var(--ink3)}
+
+/* ---------- recommendation ---------- */
+.rec{
+  background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:var(--r);box-shadow:var(--shadow);padding:14px 16px;margin-bottom:16px;
+}
+.rec-k{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--accent-ink)}
+.rec-main{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin:5px 0 3px}
+.rec-main .nm{font-family:Archivo;font-size:24px;font-weight:800;letter-spacing:-.02em}
+.rec-why{font-size:13.5px;color:var(--ink2);max-width:64ch}
+.rec-alt{
+  margin-top:11px;padding-top:10px;border-top:1px solid var(--line-soft);
+  font-size:12.5px;color:var(--ink2);display:flex;gap:7px;flex-wrap:wrap;align-items:center;
+}
+.rec-alt b{color:var(--ink);font-weight:600}
+.alert{
+  margin-top:10px;padding:7px 10px;border-radius:5px;font-size:12.5px;
+  background:var(--accent-soft);color:var(--accent-ink);font-weight:500;
+}
+
+/* ---------- board ---------- */
+.board-h{
+  display:grid;gap:10px;align-items:center;padding:0 12px 7px;
+  grid-template-columns:34px minmax(0,1fr) 52px 116px 46px 74px;
+  font-size:9.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3);font-weight:700;
+}
+.board-h .r{text-align:right}
+@media(max-width:760px){.board-h{display:none}}
+
+.tier{
+  display:flex;align-items:center;gap:9px;margin:15px 0 7px;padding:0 12px;
+  font-size:10px;text-transform:uppercase;letter-spacing:.11em;font-weight:700;color:var(--ink3);
+}
+.tier:first-child{margin-top:0}
+.tier::after{content:"";flex:1;height:1px;background:var(--line)}
+.tier .cnt{color:var(--ink3);font-weight:500;letter-spacing:.04em;text-transform:none;font-size:11px}
+
+.row{
+  display:grid;gap:10px;align-items:center;
+  grid-template-columns:34px minmax(0,1fr) 52px 116px 46px 74px;
+  padding:7px 12px;border-radius:var(--r);border:1px solid transparent;
+  background:var(--surface);margin-bottom:3px;
+  transition:border-color .12s,transform .12s;
+}
+.row:hover{border-color:var(--line);transform:translateX(1px)}
+.row.gone{opacity:.32}
+.row.mine{background:var(--good-soft);border-color:var(--good)}
+@media(max-width:760px){
+  .row{grid-template-columns:30px minmax(0,1fr) 70px;row-gap:6px}
+  .row .strip-cell,.row .adp-cell{display:none}
+}
+
+.rk{font-size:13px;color:var(--ink3);text-align:right}
+.who{min-width:0;display:flex;align-items:center;gap:8px}
+.pos{
+  flex:none;width:26px;text-align:center;padding:2px 0;border-radius:3px;
+  font-size:9.5px;font-weight:700;letter-spacing:.04em;color:#fff;
+}
+.pos.QB{background:var(--qb)}.pos.RB{background:var(--rb)}
+.pos.WR{background:var(--wr)}.pos.TE{background:var(--te)}
+.pos.K,.pos.DEF{background:var(--ink3)}
+.pos.DEF{font-size:8.5px}
+.nmwrap{min-width:0}
+.nm{font-weight:600;font-size:14.5px;letter-spacing:-.005em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tm{font-size:11px;color:var(--ink3);letter-spacing:.04em;text-transform:uppercase;font-weight:600}
+.val{text-align:right;font-size:14px;font-weight:600}
+.pts{text-align:right;font-size:12.5px;color:var(--ink2)}
+.adp-cell{text-align:right;font-size:12px;color:var(--ink3)}
+.adp-cell .steal{color:var(--good);font-weight:600}
+.adp-cell .steal{color:var(--good);font-weight:600}
+.bk{margin-top:11px;padding-top:9px;border-top:1px solid var(--line-soft)}
+#bk-copy{font-size:11.5px;color:var(--accent-ink);font-weight:600}
+#bk-copy:hover{text-decoration:underline}
+.bk-msg{font-size:11.5px;color:var(--good);margin-top:4px;line-height:1.4}
+#reset.armed{color:var(--bad);font-weight:700}
+.la-note{font-size:12.5px;color:var(--ink2);line-height:1.5;max-width:70ch}
+.la-rows{display:flex;flex-direction:column;gap:4px;margin-bottom:9px}
+.la-row{display:grid;grid-template-columns:26px 1fr 62px;gap:9px;align-items:center;
+  padding:5px 7px;border-radius:5px;font-size:13.5px}
+.la-row.win{font-weight:700}
+.la-row.tied{background:var(--good-soft)}
+.la-row.tied .la-ev{color:var(--good)}
+.la-verdict{
+  font-size:13.5px;line-height:1.5;color:var(--ink2);
+  margin-bottom:10px;max-width:70ch;
+}
+.la-verdict b{color:var(--ink);font-weight:700}
+.la-group{
+  font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;
+  color:var(--ink3);margin:2px 0 3px;display:flex;align-items:center;gap:8px;
+}
+.la-group::after{content:"";flex:1;height:1px;background:var(--line-soft)}
+.la-group.behind{margin-top:9px}
+.la-nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.la-ev{text-align:right;color:var(--ink2);font-size:12.5px}
+.la-row.win .la-ev{color:var(--good);font-weight:700}
+.la-auto{display:flex;align-items:center;gap:5px;font-size:10.5px;
+  letter-spacing:.06em;font-weight:700;color:var(--accent-ink);cursor:pointer;text-transform:none}
+.la-btn{font-size:11.5px;color:var(--accent-ink);font-weight:600}
+.la-btn:hover{text-decoration:underline}
+.la-note.working{color:var(--ink3);font-style:italic}
+/* pick entry: the most-used control on the page, so it sits at the top
+   of the main column and stays put while the board scrolls under it */
+.entry{
+  position:sticky; top:60px; z-index:20;
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--r); box-shadow:var(--shadow);
+  padding:11px 13px; margin-bottom:14px;
+}
+.entry-top{display:flex;align-items:stretch;gap:10px}
+.entry-turn{
+  flex:none; display:flex; flex-direction:column; justify-content:center;
+  align-items:center; min-width:74px; padding:4px 10px; border-radius:6px;
+  background:var(--surface2); line-height:1.15;
+}
+.entry-turn .tn{font-size:15px;font-weight:700;font-family:"IBM Plex Mono",monospace}
+.entry-turn .ts{
+  font-size:9.5px;text-transform:uppercase;letter-spacing:.09em;
+  font-weight:700;color:var(--ink3);margin-top:1px;
+}
+.entry-turn.yours{background:var(--accent-soft)}
+.entry-turn.yours .tn,.entry-turn.yours .ts{color:var(--accent-ink)}
+.entry-turn.none .ts{display:none}
+.entry-in{
+  flex:1; min-width:0; padding:9px 12px; font-size:16px; font-weight:500;
+  border:1px solid var(--line); border-radius:6px;
+  background:var(--ground); color:var(--ink); font-family:inherit;
+}
+.entry-in::placeholder{color:var(--ink3);font-weight:400;font-size:14.5px}
+.entry-in:focus{border-color:var(--accent);outline:none}
+.nag{
+  display:flex; flex-wrap:wrap; gap:9px; align-items:center; justify-content:space-between;
+  margin-top:9px; padding:8px 11px; border-radius:6px;
+  background:var(--bad-soft); color:var(--ink); font-size:13px; line-height:1.4;
+}
+.nag b{font-weight:700}
+.nag-acts{display:flex;gap:7px;flex:none}
+.nag-acts button{
+  padding:4px 10px;font-size:12px;font-weight:600;border-radius:5px;
+  border:1px solid var(--line);background:var(--surface);
+}
+.nag-acts button[data-nag="yes"]{border-color:var(--bad);color:var(--bad)}
+.nag-acts button:hover{background:var(--surface2)}
+.qgo{color:var(--accent-ink);font-weight:600}
+.qdim{color:var(--ink3)}
+.qhint{font-size:12px;color:var(--ink2);line-height:1.4;min-height:1.2em;margin-top:7px}
+.qhint b{color:var(--accent-ink);font-weight:700}
+.qmiss{color:var(--bad);font-weight:600}
+.adp-raw{color:var(--ink3)}
+.surv{font-weight:600}
+.surv.safe{color:var(--good)}
+.surv.maybe{color:var(--warn)}
+.surv.risky{color:var(--bad)}
+.onclock{
+  font-size:13px;font-weight:700;color:var(--accent-ink);
+  background:var(--accent-soft);padding:5px 9px;border-radius:5px;
+}
+.demand{font-size:12px;color:var(--ink2);margin-top:6px;line-height:1.45}
+.demand b{color:var(--ink)}
+#undo{font-size:10px;color:var(--ink3);letter-spacing:.04em}
+#undo:hover{color:var(--bad)}
+select.search{cursor:pointer}
+
+/* week strip */
+.strip{display:flex;gap:1.5px;align-items:center}
+.strip i{flex:1;height:15px;border-radius:1.5px;background:var(--surface3)}
+.strip i.boom{background:var(--good)}
+.strip i.bust{background:var(--bad)}
+.strip.unknown{opacity:.32}
+.relbar{height:15px;border-radius:2px;background:var(--surface3);overflow:hidden}
+.relbar span{display:block;height:100%;background:var(--ink3);border-radius:2px;opacity:.75}
+.strip-note{font-size:10px;color:var(--ink3);margin-top:2px;letter-spacing:.02em}
+
+.acts{display:flex;gap:4px;justify-content:flex-end}
+.acts button{
+  padding:3px 8px;font-size:11px;font-weight:600;border-radius:4px;
+  border:1px solid var(--line);color:var(--ink2);white-space:nowrap;
+}
+.acts button:hover{background:var(--surface2);color:var(--ink)}
+.acts .mine-btn:hover{border-color:var(--good);color:var(--good)}
+
+.detail{
+  grid-column:1/-1;padding:9px 0 3px;border-top:1px solid var(--line-soft);
+  margin-top:6px;font-size:13px;color:var(--ink2);display:flex;flex-direction:column;gap:6px;
+}
+.detail .stat{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px}
+.detail .stat span b{color:var(--ink);font-weight:600}
+.detail .note{
+  padding:7px 10px;background:var(--surface2);border-radius:5px;
+  border-left:2px solid var(--accent);max-width:72ch;line-height:1.45;
+}
+
+/* scatter */
+.scatter{padding:14px}
+.scatter svg{width:100%;height:auto;display:block;overflow:visible}
+.sc-dot{cursor:pointer}
+.sc-lbl{font-size:9px;fill:var(--ink3);font-family:"Source Sans 3",sans-serif}
+.sc-axis{font-size:10px;fill:var(--ink3);font-family:"Source Sans 3",sans-serif;
+  text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--ink2);padding:0 14px 12px}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend i{width:9px;height:9px;border-radius:2px;display:inline-block}
+
+.foot{max-width:1500px;margin:0 auto;padding:0 20px 60px;font-size:13px;color:var(--ink2)}
+.foot .card-b{line-height:1.55;max-width:78ch}
+.foot h3{margin:0 0 8px;font-size:14px;font-weight:700}
+.foot p{margin:0 0 10px}
+.foot code{font-family:"IBM Plex Mono",monospace;font-size:12px;
+  background:var(--surface2);padding:1px 5px;border-radius:3px}
+.kd{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:4px}
+.kd ol{margin:5px 0 0;padding-left:19px}
+.kd li{margin-bottom:2px}
+.empty-state{padding:40px 12px;text-align:center;color:var(--ink3);font-size:14px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <h1>Whil&rsquo;s Draft</h1>
+      <span class="sub">14-team &middot; half-PPR &middot; 15 rounds</span>
+    </div>
+    <div class="counter">
+      <div class="cbox"><div class="k">Round</div><div class="v num" id="c-round">1</div></div>
+      <div class="cbox"><div class="k">Picks gone</div><div class="v num" id="c-picks">0</div></div>
+      <div class="cbox"><div class="k">My team</div><div class="v num" id="c-mine">0</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="rail">
+
+    <div class="card">
+      <div class="card-h">What do you want</div>
+      <div class="card-b">
+        <div class="dial-val" id="dial-say"></div>
+        <input type="range" id="dial" min="0" max="100" step="5" value="50"
+               aria-label="Balance between steady scoring and explosive scoring">
+        <div class="dial-ends"><span>Explosive</span><span>Steady</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">Your seat
+        <button id="undo" title="Undo the last pick entered">Undo last</button>
+      </div>
+      <div class="card-b" style="display:flex;flex-direction:column;gap:9px">
+        <div class="seg" id="teamsel">
+          <button data-teams="12" aria-pressed="false">12</button>
+          <button data-teams="14" aria-pressed="true">14</button>
+          <button data-teams="16" aria-pressed="false">16</button>
+        </div>
+        <div class="seg" id="dtype">
+          <button data-dtype="snake" aria-pressed="true">Snake</button>
+          <button data-dtype="linear" aria-pressed="false">Linear</button>
+          <button data-dtype="auction" aria-pressed="false">Auction</button>
+        </div>
+        <select id="slot" class="search" aria-label="Your draft seat number"></select>
+        <div id="clock"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">My roster <button id="reset" style="font-size:10px;color:var(--ink3);letter-spacing:.04em">Reset</button></div>
+      <div class="card-b"><div id="roster"></div>
+        <div class="bk">
+          <button id="bk-copy">Copy backup link</button>
+          <div id="bk-msg" class="bk-msg" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">Starters still left</div>
+      <div class="card-b"><div class="scarce" id="scarce"></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">Filter</div>
+      <div class="card-b" style="display:flex;flex-direction:column;gap:9px">
+        <div class="seg" id="posfilter">
+          <button data-pos="ALL" aria-pressed="true">All</button>
+          <button data-pos="QB" aria-pressed="false">QB</button>
+          <button data-pos="RB" aria-pressed="false">RB</button>
+          <button data-pos="WR" aria-pressed="false">WR</button>
+          <button data-pos="TE" aria-pressed="false">TE</button>
+        </div>
+        <div class="seg" id="viewtoggle">
+          <button data-view="list" aria-pressed="true">Ranked list</button>
+          <button data-view="map" aria-pressed="false">Value map</button>
+        </div>
+        <label style="display:flex;gap:7px;align-items:center;font-size:13px;color:var(--ink2);cursor:pointer">
+          <input type="checkbox" id="hidegone" checked> Hide drafted players
+        </label>
+      </div>
+    </div>
+
+  </aside>
+
+  <main>
+    <div class="entry">
+      <div class="entry-top">
+        <div class="entry-turn" id="entry-turn"></div>
+        <input class="entry-in" id="q" type="search" autocomplete="off" spellcheck="false"
+               placeholder="Type the name that was just drafted, then press Enter"
+               aria-label="Log the pick that just happened">
+      </div>
+      <div id="qhint" class="qhint" aria-live="polite"></div>
+      <div id="nag" class="nag" hidden></div>
+    </div>
+
+    <div class="rec" id="rec"></div>
+    <div class="card" id="lacard" style="margin-bottom:16px">
+      <div class="card-h">Playing it out
+        <label class="la-auto"><input type="checkbox" id="la-auto"> after every pick</label>
+      </div>
+      <div class="card-b"><div id="la-out"><div class="la-note">
+        The pick above is a fast judgement. This simulates the rest of the draft
+        many times to see which choice actually leaves you with the best starting
+        lineup at the end &mdash; which is how scarcity gets priced properly.
+      </div></div></div>
+    </div>
+
+    <div id="listview">
+      <div class="board-h">
+        <div class="r">#</div><div>Player</div><div class="r">Value</div>
+        <div>2025 season</div><div class="r">Pts</div><div class="r" id="mkt-head">Usually goes</div>
+      </div>
+      <div id="board"></div>
+    </div>
+
+    <div id="mapview" class="card scatter" hidden>
+      <div id="scatter"></div>
+      <div class="legend">
+        <span><i style="background:var(--qb)"></i>QB</span>
+        <span><i style="background:var(--rb)"></i>RB</span>
+        <span><i style="background:var(--wr)"></i>WR</span>
+        <span><i style="background:var(--te)"></i>TE</span>
+        <span style="color:var(--ink3)">Up and to the right is better. Click a dot to draft.</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<footer class="foot">
+  <div class="card"><div class="card-b">
+    <h3>Rounds 14 and 15: kicker and defense</h3>
+    <p>Take them with your <em>last two picks</em>, never sooner. Kickers are close to
+      unpredictable year over year, and a streamed defense costs nothing. Spending a
+      mid-round pick here is the most common way beginners lose value.</p>
+    <div class="kd">
+      <div><b>Kickers</b><ol><li>Brandon Aubrey (DAL)</li><li>Cameron Dicker (LAC)</li><li>Ka'imi Fairbairn (HOU)</li><li>Jake Bates (DET)</li></ol></div>
+      <div><b>Defenses</b><ol><li>Denver</li><li>Seattle</li><li>Houston</li><li>Minnesota</li></ol></div>
+    </div>
+  </div></div>
+
+  <div class="card" style="margin-top:14px"><div class="card-b">
+    <h3>You are not playing football. You are playing thirteen coworkers.</h3>
+    <p>This distinction is the whole strategy. You do not need the objectively best team —
+      you need a team that beats <em>these specific people</em>. That is a much easier
+      problem, because casual drafters make the same mistakes every single year.</p>
+
+    <p><b>Why steady beats explosive here, specifically.</b> You play one opponent per week
+      and only need to beat that one score. If you are the better-prepared manager, you are
+      already the favorite — and a favorite wants <em>less</em> randomness, because variance
+      is what lets a worse team beat you. Underdogs want chaos; favorites want boring. Your
+      instinct to prize consistency is the correct play for someone holding an edge.</p>
+
+    <p><b>The five mistakes to harvest.</b> Watch for these and take the value they leave behind:</p>
+    <ol style="margin:4px 0 12px;padding-left:20px">
+      <li><b>Drafting a quarterback too early.</b> Quarterbacks score the most raw points, so
+        beginners reach. But you start only one, and the 14th-best is nearly as good as the
+        5th. Every early quarterback taken pushes a real starter down to you.</li>
+      <li><b>Taking a kicker or defense before the last two rounds.</b> Pure gift. Let them.</li>
+      <li><b>Homer picks.</b> Someone will take a player from their favorite team two rounds
+        early. Free value for everyone else.</li>
+      <li><b>Chasing last season.</b> Casual drafters rank by what happened last year rather
+        than what is projected this year.</li>
+      <li><b>Panic during a run.</b> When three backs go in a row, someone always reaches. Being
+        one pick ahead of a run is profit; being three picks ahead is a reach.</li>
+    </ol>
+
+    <p><b>Tiers matter more than rankings.</b> The real question at your pick is never "who is
+      best?" — it is "how many players this good will survive until my next turn?" If six
+      players remain in a tier and ten picks happen before you pick again, the tier is gone,
+      so take one now. If twelve remain, wait and take the scarcer position. The tier lines
+      on the board are there for exactly this.</p>
+
+    <p><b>Do not stack your own team.</b> A quarterback and his receiver boom together and bust
+      together. That is great if you need variance and actively bad if you want a steady floor.
+      The board warns you when three of your starters share an NFL team.</p>
+
+    <p><b>The draft is not where most of the edge is.</b> In a casual league, more value moves
+      after the draft than during it. People drop good players after two bad weeks, forget to
+      set lineups, and accept lopsided trades. Checking the waiver wire every Tuesday is
+      probably worth more than anything you do tomorrow.</p>
+  </div></div>
+
+  <div class="card" style="margin-top:14px"><div class="card-b">
+    <h3>How the ranking works</h3>
+    <p><b>Value</b> is not raw points. It is how many points a player scores above the
+      <em>last startable player at his own position</em> in a 14-team league. A quarterback
+      who scores 330 points is worth less than a running back who scores 240, because you
+      can always find another decent quarterback and you cannot find another decent back.</p>
+    <p><b>The 2025 season strip</b> shows all 17 weeks. Green is a top-tier week, red is a
+      week that actively cost you the matchup, grey is ordinary. A player with lots of green
+      and no red is the ideal: high total, few disasters.</p>
+    <p><b>The dial</b> re-ranks everyone. Slide toward <em>Steady</em> and players who scored
+      close to their average every week rise; slide toward <em>Explosive</em> and raw point
+      totals take over. Underneath it is a mean-variance tradeoff — each player's projected
+      weekly average minus a penalty for their historical week-to-week swing.</p>
+
+    <h3 style="margin-top:18px">Why the dial defaults to 25, not 100</h3>
+    <p>The default is not a guess. We simulated <b>50,400 seasons</b> at each setting — drafting
+      a team, then playing a full 13-week schedule against thirteen opponents drafting off the
+      consensus market — with every setting facing identical opponents and identical weekly luck
+      so the comparison is apples to apples. The result:</p>
+    <table style="width:100%;border-collapse:collapse;margin:10px 0 12px;font-size:13px">
+      <tr style="border-bottom:1px solid var(--line)">
+        <th style="text-align:left;padding:5px 0;font-weight:700">Dial</th>
+        <th style="text-align:right;padding:5px 0;font-weight:700">Wins</th>
+        <th style="text-align:right;padding:5px 0;font-weight:700">Playoff odds</th></tr>
+      <tr><td style="padding:4px 0">0 — explosive</td><td class="num" style="text-align:right">8.49</td><td class="num" style="text-align:right">86.8%</td></tr>
+      <tr style="background:var(--good-soft)"><td style="padding:4px 0"><b>25 — default</b></td><td class="num" style="text-align:right"><b>8.52</b></td><td class="num" style="text-align:right"><b>87.3%</b></td></tr>
+      <tr><td style="padding:4px 0">50 — balanced</td><td class="num" style="text-align:right">8.41</td><td class="num" style="text-align:right">85.9%</td></tr>
+      <tr><td style="padding:4px 0">75</td><td class="num" style="text-align:right">8.13</td><td class="num" style="text-align:right">82.1%</td></tr>
+      <tr><td style="padding:4px 0">100 — maximum safety</td><td class="num" style="text-align:right">7.89</td><td class="num" style="text-align:right">78.2%</td></tr>
+    </table>
+    <p>Chasing consistency <em>hard</em> is the worst strategy tested — about nine percentage
+      points of playoff odds worse than a light tilt. The reason is worth understanding, because
+      it is the one genuinely counterintuitive thing on this page.</p>
+    <p><b>You already own most of the consistency you are trying to buy.</b> You start nine
+      players, and their good and bad weeks largely cancel out. Across a typical starting nine,
+      the average <em>individual</em> player swings about 52% around his own average — but the
+      <em>team total</em> swings only about 18%. Simply adding up nine players removes roughly
+      two thirds of the volatility for free. Paying a premium in projected points to buy steadier
+      individuals is therefore paying twice for something you mostly already have, and the points
+      you give up are gone for good.</p>
+    <p>The one place this breaks down is correlation. If your players' weeks are <em>linked</em> —
+      several starters from the same NFL team, or a quarterback throwing to your own receiver —
+      they stop cancelling out. A fully correlated lineup would swing about 52% again, nearly three
+      times worse. That is why the board warns you about stacking, and it is where your attention
+      to consistency actually pays.</p>
+    <p><b>Why some players show no week-by-week record.</b> The 2025 column only fills in
+      when there is something real to show. A player who missed most of last season through
+      injury &mdash; Malik Nabers tore an ACL four games in, Mike Evans broke a collarbone,
+      Terry McLaurin missed seven games &mdash; has no meaningful 2025 pattern, so the board
+      falls back to his measured steadiness across 2023&ndash;25 and says so. Players marked <em>no fantasy role in 2025</em> had no meaningful workload last season
+      &mdash; some are genuine rookies, but most are veterans who sat behind someone else.
+      The source table only covers about the top fifty players per position, so falling
+      outside it is not the same as being new. Either way nothing was measured, and their
+      reliability figure is a positional average &mdash; treat it as a placeholder rather
+      than a reading. Kickers and defenses have no published
+      consistency table at all, so theirs is an outright estimate, which is one more reason
+      not to spend a real pick on either.</p>
+
+    <p><b>Where the numbers come from.</b> Projections are 2026 preseason estimates scored
+      under your exact Yahoo settings (half point per catch, 4-point passing touchdowns,
+      −2 for fumbles). Week-to-week reliability comes from measured 2025 results, regressed
+      toward the positional average because one season is a small sample. Players marked
+      <em>no track record</em> are rookies — their reliability is a positional average, not
+      a measurement, so treat it as a guess.</p>
+    <p><b>How much to trust the simulation.</b> We tested this by perturbing the
+      projections by a realistic &plusmn;8% and re-running. Even when the simulation showed
+      a 20&ndash;28 point margin, the winner changed about half the time. Running more
+      simulations does not help &mdash; 40 runs and 1,000 runs give the same answer. The
+      limit is not computing power or sample size, it is that nobody can project a football
+      season accurately. What the simulation genuinely does is separate the handful of
+      sensible picks from the clearly worse ones. Inside that handful, trust your own read.</p>
+
+    <p><b>Would more data help?</b> Barely. We measured which inputs actually move the
+      recommendation: perturbing the projections changed it ~60% of the time, perturbing the
+      consistency ratings ~17%, and perturbing the market prices <em>0%</em>. Better
+      projections would matter &mdash; but preseason projections are roughly &plusmn;20% for
+      everyone, which is a limit of the sport, not a gap in this dataset.</p>
+
+    <p style="color:var(--ink3)"><b>What this cannot do.</b> Projections explain maybe a third
+      of what actually happens in a season. Injuries and touchdown luck do the rest. This
+      board makes you well-calibrated on every pick, which wins more often than not across
+      many seasons. It cannot stop a good draft from going wrong in one.</p>
+  </div></div>
+</footer>
+
+<script>
+const DATA = {"meta":{"teams":14,"games":17,"scoring":"Half-PPR (0.5/rec), 4pt pass TD, 6pt rush/rec TD, -2 fum","replacement_rank":{"QB":14,"RB":34,"WR":36,"TE":15,"K":14,"DEF":14},"starters":"QB/RB/RB/WR/WR/TE/FLEX/K/DEF","bench":6,"rounds":15,"default_lambda":0.5},"players":[{"name":"Josh Allen","team":"BUF","pos":"QB","pts":371.6,"detail":"3787 pass yd, 26 pass TD, 567 rush yd, 12 rush TD","adp":33.0,"cr":0.525,"ppg25":21.4,"star":3,"stiff":4,"proven":true,"span":"2025","cr_raw":0.536,"pos_mean_cr":0.51,"vor":74.2,"repl_pts":297.4,"ppg":21.86,"sd":11.48,"rely":32},{"name":"Drake Maye","team":"NE","pos":"QB","pts":330.3,"detail":"4140 pass yd, 29 pass TD, 433 rush yd, 3 rush TD","adp":51.3,"cr":0.363,"ppg25":20.7,"star":3,"stiff":1,"proven":true,"span":"2025","cr_raw":0.26,"pos_mean_cr":0.51,"vor":32.9,"repl_pts":297.4,"ppg":19.43,"sd":7.05,"rely":100,"notes":["Was the single steadiest fantasy player in 2025 (3 boom weeks, 1 bust). Regressed toward the mean here because one season is a small sample."]},{"name":"Lamar Jackson","team":"BAL","pos":"QB","pts":323.2,"detail":"3704 pass yd, 26 pass TD, 646 rush yd, 3 rush TD","adp":55.5,"cr":0.59,"ppg25":16.5,"star":0,"stiff":6,"proven":true,"span":"2025","cr_raw":0.646,"pos_mean_cr":0.51,"vor":25.8,"repl_pts":297.4,"ppg":19.01,"sd":11.22,"rely":4},{"name":"Jayden Daniels","team":"WAS","pos":"QB","pts":316.4,"detail":"3770 pass yd, 23 pass TD, 642 rush yd, 4 rush TD","adp":70.7,"cr":0.557,"ppg25":19.6,"proven":true,"span":"3yr","cr_raw":0.59,"pos_mean_cr":0.51,"vor":19.0,"repl_pts":297.4,"ppg":18.61,"sd":10.37,"rely":18,"notes":["No usable 2025 sample; reliability measured across 2023-25."]},{"name":"Jalen Hurts","team":"PHI","pos":"QB","pts":317.2,"detail":"3556 pass yd, 23 pass TD, 456 rush yd, 8 rush TD","adp":79.5,"cr":0.489,"ppg25":18.7,"star":2,"stiff":3,"proven":true,"span":"2025","cr_raw":0.475,"pos_mean_cr":0.51,"vor":19.8,"repl_pts":297.4,"ppg":18.66,"sd":9.12,"rely":47},{"name":"Bo Nix","team":"DEN","pos":"QB","pts":306.6,"detail":"3850 pass yd, 27 pass TD, 362 rush yd, 4 rush TD","adp":112.3,"cr":0.485,"ppg25":17.9,"star":2,"stiff":3,"proven":true,"span":"2025","cr_raw":0.467,"pos_mean_cr":0.51,"vor":9.2,"repl_pts":297.4,"ppg":18.04,"sd":8.75,"rely":49},{"name":"Joe Burrow","team":"CIN","pos":"QB","pts":307.7,"detail":"4128 pass yd, 33 pass TD, 182 rush yd, 1 rush TD","adp":57.5,"cr":0.571,"ppg25":16.8,"star":0,"stiff":3,"proven":true,"span":"2025","cr_raw":0.615,"pos_mean_cr":0.51,"vor":10.3,"repl_pts":297.4,"ppg":18.1,"sd":10.34,"rely":12},{"name":"Brock Purdy","team":"SF","pos":"QB","pts":300.4,"detail":"4159 pass yd, 26 pass TD, 286 rush yd, 3 rush TD","adp":89.8,"cr":0.582,"ppg25":19.7,"star":2,"stiff":2,"proven":true,"span":"2025","cr_raw":0.633,"pos_mean_cr":0.51,"vor":3.0,"repl_pts":297.4,"ppg":17.67,"sd":10.28,"rely":8},{"name":"Caleb Williams","team":"CHI","pos":"QB","pts":304.4,"detail":"3871 pass yd, 27 pass TD, 412 rush yd, 2 rush TD","adp":91.9,"cr":0.468,"ppg25":18.7,"star":2,"stiff":4,"proven":true,"span":"2025","cr_raw":0.439,"pos_mean_cr":0.51,"vor":7.0,"repl_pts":297.4,"ppg":17.91,"sd":8.38,"rely":56},{"name":"Dak Prescott","team":"DAL","pos":"QB","pts":301.7,"detail":"4329 pass yd, 30 pass TD, 161 rush yd, 1 rush TD","adp":66.3,"cr":0.474,"ppg25":18.5,"star":2,"stiff":5,"proven":true,"span":"2025","cr_raw":0.449,"pos_mean_cr":0.51,"vor":4.3,"repl_pts":297.4,"ppg":17.75,"sd":8.41,"rely":53},{"name":"Jaxson Dart","team":"NYG","pos":"QB","pts":302.6,"detail":"3570 pass yd, 20 pass TD, 564 rush yd, 6 rush TD","adp":120.6,"cr":0.6,"ppg25":17.3,"star":1,"stiff":3,"proven":true,"span":"2025","cr_raw":0.663,"pos_mean_cr":0.51,"vor":5.2,"repl_pts":297.4,"ppg":17.8,"sd":10.68,"rely":0},{"name":"Justin Herbert","team":"LAC","pos":"QB","pts":298.2,"detail":"3952 pass yd, 25 pass TD, 427 rush yd, 2 rush TD","adp":108.5,"cr":0.494,"ppg25":17.9,"star":0,"stiff":5,"proven":true,"span":"2025","cr_raw":0.483,"pos_mean_cr":0.51,"vor":0.8,"repl_pts":297.4,"ppg":17.54,"sd":8.66,"rely":45},{"name":"Trevor Lawrence","team":"JAC","pos":"QB","pts":297.4,"detail":"3948 pass yd, 25 pass TD, 301 rush yd, 4 rush TD","adp":92.3,"cr":0.47,"ppg25":19.9,"star":2,"stiff":4,"proven":true,"span":"2025","cr_raw":0.442,"pos_mean_cr":0.51,"vor":0.0,"repl_pts":297.4,"ppg":17.49,"sd":8.22,"rely":55},{"name":"Jared Goff","team":"DET","pos":"QB","pts":297.8,"detail":"4459 pass yd, 32 pass TD, 50 rush yd, 0 rush TD","adp":100.1,"cr":0.463,"ppg25":17.5,"star":1,"stiff":4,"proven":true,"span":"2025","cr_raw":0.43,"pos_mean_cr":0.51,"vor":0.4,"repl_pts":297.4,"ppg":17.52,"sd":8.11,"rely":58},{"name":"Tyler Shough","team":"NO","pos":"QB","pts":294.1,"detail":"3951 pass yd, 22 pass TD, 377 rush yd, 4 rush TD","adp":139.4,"proven":false,"cr":0.51,"cr_raw":null,"pos_mean_cr":0.51,"vor":-3.3,"repl_pts":297.4,"ppg":17.3,"sd":8.82,"rely":38},{"name":"Patrick Mahomes","team":"KC","pos":"QB","pts":292.1,"detail":"3831 pass yd, 26 pass TD, 315 rush yd, 3 rush TD","adp":101.5,"cr":0.52,"ppg25":20.4,"star":2,"stiff":3,"proven":true,"span":"2025","cr_raw":0.528,"pos_mean_cr":0.51,"vor":-5.3,"repl_pts":297.4,"ppg":17.18,"sd":8.93,"rely":34},{"name":"Kyler Murray","team":"MIN","pos":"QB","pts":290.7,"detail":"3672 pass yd, 23 pass TD, 494 rush yd, 3 rush TD","adp":136.6,"proven":false,"cr":0.51,"cr_raw":null,"pos_mean_cr":0.51,"vor":-6.7,"repl_pts":297.4,"ppg":17.1,"sd":8.72,"rely":38,"notes":["No qualifying season in ESPN's data and a new team this year, so his reliability figure is a positional average, not a measurement."]},{"name":"Matthew Stafford","team":"LAR","pos":"QB","pts":291.3,"detail":"4242 pass yd, 33 pass TD, 22 rush yd, 0 rush TD","adp":74.5,"cr":0.41,"ppg25":20.6,"star":3,"stiff":2,"proven":true,"span":"2025","cr_raw":0.339,"pos_mean_cr":0.51,"vor":-6.1,"repl_pts":297.4,"ppg":17.14,"sd":7.03,"rely":80},{"name":"Baker Mayfield","team":"TB","pos":"QB","pts":273.0,"detail":"3750 pass yd, 24 pass TD, 366 rush yd, 1 rush TD","adp":134.7,"cr":0.439,"ppg25":16.0,"star":0,"stiff":3,"proven":true,"span":"2025","cr_raw":0.39,"pos_mean_cr":0.51,"vor":-24.4,"repl_pts":297.4,"ppg":16.06,"sd":7.05,"rely":68},{"name":"Malik Willis","team":"MIA","pos":"QB","pts":274.1,"detail":"3450 pass yd, 15 pass TD, 657 rush yd, 4 rush TD","adp":null,"proven":false,"cr":0.51,"cr_raw":null,"pos_mean_cr":0.51,"vor":-23.3,"repl_pts":297.4,"ppg":16.12,"sd":8.22,"rely":38},{"name":"Sam Darnold","team":"SEA","pos":"QB","pts":271.1,"detail":"4130 pass yd, 26 pass TD, 125 rush yd, 1 rush TD","adp":150.2,"cr":0.549,"ppg25":13.8,"star":0,"stiff":9,"proven":true,"span":"2025","cr_raw":0.576,"pos_mean_cr":0.51,"vor":-26.3,"repl_pts":297.4,"ppg":15.95,"sd":8.76,"rely":22},{"name":"Jordan Love","team":"GB","pos":"QB","pts":269.1,"detail":"3856 pass yd, 26 pass TD, 185 rush yd, 1 rush TD","adp":152.7,"cr":0.535,"ppg25":15.7,"star":2,"stiff":6,"proven":true,"span":"2025","cr_raw":0.553,"pos_mean_cr":0.51,"vor":-28.3,"repl_pts":297.4,"ppg":15.83,"sd":8.47,"rely":27},{"name":"Daniel Jones","team":"IND","pos":"QB","pts":261.7,"detail":"3688 pass yd, 21 pass TD, 278 rush yd, 3 rush TD","adp":168.6,"cr":0.54,"ppg25":17.4,"star":0,"stiff":2,"proven":true,"span":"2025","cr_raw":0.561,"pos_mean_cr":0.51,"vor":-35.7,"repl_pts":297.4,"ppg":15.39,"sd":8.31,"rely":25},{"name":"Bryce Young","team":"CAR","pos":"QB","pts":249.5,"detail":"3355 pass yd, 22 pass TD, 229 rush yd, 3 rush TD","adp":null,"cr":0.561,"ppg25":13.6,"star":1,"stiff":7,"proven":true,"span":"2025","cr_raw":0.598,"pos_mean_cr":0.51,"vor":-47.9,"repl_pts":297.4,"ppg":14.68,"sd":8.24,"rely":16},{"name":"C.J. Stroud","team":"HOU","pos":"QB","pts":248.6,"detail":"3759 pass yd, 21 pass TD, 218 rush yd, 1 rush TD","adp":161.8,"proven":false,"cr":0.51,"cr_raw":null,"pos_mean_cr":0.51,"vor":-48.8,"repl_pts":297.4,"ppg":14.62,"sd":7.46,"rely":38,"notes":["An established starter, not a rookie \u2014 he simply falls outside ESPN's consistency table, which covers roughly the top 50 per position."]},{"name":"Geno Smith","team":"NYJ","pos":"QB","pts":232.9,"detail":"3619 pass yd, 21 pass TD, 157 rush yd, 1 rush TD","adp":null,"proven":false,"cr":0.51,"cr_raw":null,"pos_mean_cr":0.51,"vor":-64.5,"repl_pts":297.4,"ppg":13.7,"sd":6.99,"rely":38,"notes":[]},{"name":"Cam Ward","team":"TEN","pos":"QB","pts":234.6,"detail":"3662 pass yd, 19 pass TD, 207 rush yd, 1 rush TD","adp":171.8,"cr":0.499,"ppg25":11.0,"star":0,"stiff":10,"proven":true,"span":"2025","cr_raw":0.492,"pos_mean_cr":0.51,"vor":-62.8,"repl_pts":297.4,"ppg":13.8,"sd":6.89,"rely":43},{"name":"Aaron Rodgers","team":"PIT","pos":"QB","pts":234.4,"detail":"3649 pass yd, 23 pass TD, 80 rush yd, 0 rush TD","adp":null,"cr":0.498,"ppg25":14.2,"star":0,"stiff":8,"proven":true,"span":"2025","cr_raw":0.49,"pos_mean_cr":0.51,"vor":-63.0,"repl_pts":297.4,"ppg":13.79,"sd":6.87,"rely":43},{"name":"Jacoby Brissett","team":"ARI","pos":"QB","pts":232.0,"detail":"3645 pass yd, 19 pass TD, 178 rush yd, 1 rush TD","adp":null,"cr":0.548,"ppg25":16.2,"star":0,"stiff":3,"proven":true,"span":"2025","cr_raw":0.575,"pos_mean_cr":0.51,"vor":-65.4,"repl_pts":297.4,"ppg":13.65,"sd":7.48,"rely":22},{"name":"Fernando Mendoza","team":"LV","pos":"QB","pts":193.3,"detail":"2979 pass yd, 15 pass TD, 217 rush yd, 1 rush TD","adp":null,"proven":false,"cr":0.51,"cr_raw":null,"pos_mean_cr":0.51,"vor":-104.1,"repl_pts":297.4,"ppg":11.37,"sd":5.8,"rely":38},{"name":"Jahmyr Gibbs","team":"DET","pos":"RB","pts":327.7,"rec":72.0,"touches":351.0,"detail":"1422 rush yd, 12 rush TD, 72 rec, 572 rec yd","adp":1.5,"cr":0.635,"ppg25":21.6,"star":6,"stiff":0,"proven":true,"span":"2025","cr_raw":0.627,"pos_mean_cr":0.647,"vor":194.5,"repl_pts":133.2,"ppg":19.28,"sd":12.24,"rely":68,"notes":["Highest raw projection in the field, but shares carries and his week-to-week swing is wide for a first-round pick."]},{"name":"Bijan Robinson","team":"ATL","pos":"RB","pts":321.1,"rec":84.0,"touches":364.0,"detail":"1402 rush yd, 9 rush TD, 84 rec, 707 rec yd","adp":2.2,"cr":0.543,"ppg25":21.8,"star":9,"stiff":0,"proven":true,"span":"2025","cr_raw":0.47,"pos_mean_cr":0.647,"vor":187.9,"repl_pts":133.2,"ppg":18.89,"sd":10.26,"rely":85},{"name":"Christian McCaffrey","team":"SF","pos":"RB","pts":301.1,"rec":82.0,"touches":361.0,"detail":"1144 rush yd, 9 rush TD, 82 rec, 715 rec yd","adp":6.6,"cr":0.465,"ppg25":24.5,"star":9,"stiff":0,"proven":true,"span":"2025","cr_raw":0.336,"pos_mean_cr":0.647,"vor":167.9,"repl_pts":133.2,"ppg":17.71,"sd":8.24,"rely":100,"notes":["Was elite AND remarkably steady in 2025: 9 boom weeks and zero bust weeks, the best combined line in the dataset."],"alt":["CMC"]},{"name":"Jonathan Taylor","team":"IND","pos":"RB","pts":265.0,"rec":36.0,"touches":335.0,"detail":"1436 rush yd, 12 rush TD, 36 rec, 289 rec yd","adp":5.9,"cr":0.61,"ppg25":21.3,"star":6,"stiff":0,"proven":true,"span":"2025","cr_raw":0.584,"pos_mean_cr":0.647,"vor":131.8,"repl_pts":133.2,"ppg":15.59,"sd":9.51,"rely":73},{"name":"James Cook","team":"BUF","pos":"RB","pts":256.0,"rec":32.0,"touches":307.0,"detail":"1377 rush yd, 11 rush TD, 32 rec, 275 rec yd","adp":9.3,"cr":0.571,"ppg25":17.8,"star":4,"stiff":1,"proven":true,"span":"2025","cr_raw":0.518,"pos_mean_cr":0.647,"vor":122.8,"repl_pts":133.2,"ppg":15.06,"sd":8.6,"rely":80,"alt":["James Cook III"]},{"name":"Derrick Henry","team":"BAL","pos":"RB","pts":248.1,"rec":16.0,"touches":337.0,"detail":"1572 rush yd, 12 rush TD, 16 rec, 144 rec yd","adp":9.7,"cr":0.624,"ppg25":16.4,"star":3,"stiff":1,"proven":true,"span":"2025","cr_raw":0.608,"pos_mean_cr":0.647,"vor":114.9,"repl_pts":133.2,"ppg":14.59,"sd":9.1,"rely":70},{"name":"Omarion Hampton","team":"LAC","pos":"RB","pts":238.2,"rec":52.0,"touches":309.0,"detail":"1129 rush yd, 9 rush TD, 52 rec, 366 rec yd","adp":24.0,"cr":0.642,"ppg25":15.1,"star":1,"stiff":1,"proven":true,"span":"2025","cr_raw":0.639,"pos_mean_cr":0.647,"vor":105.0,"repl_pts":133.2,"ppg":14.01,"sd":8.99,"rely":67},{"name":"Saquon Barkley","team":"PHI","pos":"RB","pts":237.9,"rec":42.0,"touches":323.0,"detail":"1236 rush yd, 9 rush TD, 42 rec, 307 rec yd","adp":17.6,"cr":0.583,"ppg25":14.5,"star":1,"stiff":0,"proven":true,"span":"2025","cr_raw":0.538,"pos_mean_cr":0.647,"vor":104.7,"repl_pts":133.2,"ppg":13.99,"sd":8.16,"rely":78},{"name":"De'Von Achane","team":"MIA","pos":"RB","pts":236.2,"rec":56.0,"touches":284.0,"detail":"1161 rush yd, 6 rush TD, 56 rec, 411 rec yd","adp":11.7,"cr":0.511,"ppg25":20.2,"star":3,"stiff":0,"proven":true,"span":"2025","cr_raw":0.415,"pos_mean_cr":0.647,"vor":103.0,"repl_pts":133.2,"ppg":13.89,"sd":7.1,"rely":91},{"name":"Chase Brown","team":"CIN","pos":"RB","pts":234.7,"rec":55.0,"touches":297.0,"detail":"1066 rush yd, 7 rush TD, 55 rec, 377 rec yd","adp":15.1,"cr":0.527,"ppg25":16.6,"star":3,"stiff":0,"proven":true,"span":"2025","cr_raw":0.442,"pos_mean_cr":0.647,"vor":101.5,"repl_pts":133.2,"ppg":13.81,"sd":7.28,"rely":88},{"name":"Kenneth Walker","team":"KC","pos":"RB","pts":233.7,"rec":42.0,"touches":304.0,"detail":"1177 rush yd, 9 rush TD, 42 rec, 322 rec yd","adp":20.5,"cr":0.606,"ppg25":11.3,"star":0,"stiff":1,"proven":true,"span":"2025","cr_raw":0.578,"pos_mean_cr":0.647,"vor":100.5,"repl_pts":133.2,"ppg":13.75,"sd":8.33,"rely":74,"alt":["Ken Walker","K9"]},{"name":"Ashton Jeanty","team":"LV","pos":"RB","pts":232.9,"rec":56.0,"touches":327.0,"detail":"1137 rush yd, 7 rush TD, 56 rec, 406 rec yd","adp":18.9,"cr":0.621,"ppg25":14.4,"star":4,"stiff":0,"proven":true,"span":"2025","cr_raw":0.602,"pos_mean_cr":0.647,"vor":99.7,"repl_pts":133.2,"ppg":13.7,"sd":8.51,"rely":71},{"name":"Jeremiyah Love","team":"ARI","pos":"RB","pts":228.7,"rec":56.0,"touches":302.0,"detail":"1082 rush yd, 7 rush TD, 56 rec, 417 rec yd","adp":29.0,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":95.5,"repl_pts":133.2,"ppg":13.45,"sd":8.7,"rely":66,"rookie":true,"notes":["Rookie - no NFL week-to-week history, so his reliability number is a positional average, not a measurement."]},{"name":"Kyren Williams","team":"LAR","pos":"RB","pts":227.6,"rec":34.0,"touches":283.0,"detail":"1171 rush yd, 10 rush TD, 34 rec, 245 rec yd","adp":27.4,"cr":0.499,"ppg25":15.5,"star":2,"stiff":0,"proven":true,"span":"2025","cr_raw":0.395,"pos_mean_cr":0.647,"vor":94.4,"repl_pts":133.2,"ppg":13.39,"sd":6.68,"rely":94,"notes":["Modest ceiling but one of the steadiest backs in the league - a classic floor play."]},{"name":"Josh Jacobs","team":"GB","pos":"RB","pts":223.4,"rec":35.0,"touches":317.0,"detail":"1155 rush yd, 10 rush TD, 35 rec, 277 rec yd","adp":25.4,"cr":0.636,"ppg25":15.8,"star":3,"stiff":2,"proven":true,"span":"2025","cr_raw":0.629,"pos_mean_cr":0.647,"vor":90.2,"repl_pts":133.2,"ppg":13.14,"sd":8.36,"rely":68},{"name":"Breece Hall","team":"NYJ","pos":"RB","pts":218.8,"rec":47.0,"touches":305.0,"detail":"1162 rush yd, 5 rush TD, 47 rec, 403 rec yd","adp":33.5,"cr":0.63,"ppg25":13.0,"star":1,"stiff":0,"proven":true,"span":"2025","cr_raw":0.618,"pos_mean_cr":0.647,"vor":85.6,"repl_pts":133.2,"ppg":12.87,"sd":8.11,"rely":69},{"name":"Javonte Williams","team":"DAL","pos":"RB","pts":213.9,"rec":33.0,"touches":278.0,"detail":"1126 rush yd, 10 rush TD, 33 rec, 217 rec yd","adp":33.2,"cr":0.534,"ppg25":15.2,"star":2,"stiff":0,"proven":true,"span":"2025","cr_raw":0.454,"pos_mean_cr":0.647,"vor":80.7,"repl_pts":133.2,"ppg":12.58,"sd":6.72,"rely":87},{"name":"Cam Skattebo","team":"NYG","pos":"RB","pts":212.2,"rec":44.0,"touches":306.0,"detail":"1048 rush yd, 8 rush TD, 44 rec, 346 rec yd","adp":38.4,"cr":0.635,"ppg25":16.0,"star":2,"stiff":0,"proven":true,"span":"2025","cr_raw":0.626,"pos_mean_cr":0.647,"vor":79.0,"repl_pts":133.2,"ppg":12.48,"sd":7.92,"rely":68},{"name":"Bucky Irving","team":"TB","pos":"RB","pts":206.3,"rec":39.0,"touches":300.0,"detail":"1045 rush yd, 7 rush TD, 39 rec, 315 rec yd","adp":47.0,"cr":0.614,"ppg25":13.9,"star":0,"stiff":0,"proven":true,"span":"2025","cr_raw":0.591,"pos_mean_cr":0.647,"vor":73.1,"repl_pts":133.2,"ppg":12.14,"sd":7.45,"rely":72},{"name":"Bhayshul Tuten","team":"JAC","pos":"RB","pts":204.2,"rec":38.0,"touches":295.0,"detail":"1055 rush yd, 7 rush TD, 38 rec, 288 rec yd","adp":52.5,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":71.0,"repl_pts":133.2,"ppg":12.01,"sd":7.77,"rely":66,"notes":["Entered the league in 2025 but had no fantasy role, so there is no usable week-to-week record. Reliability shown is a positional average."]},{"name":"Travis Etienne","team":"NO","pos":"RB","pts":201.8,"rec":44.0,"touches":290.0,"detail":"1082 rush yd, 5 rush TD, 44 rec, 327 rec yd","adp":37.3,"cr":0.54,"ppg25":14.9,"star":2,"stiff":1,"proven":true,"span":"2025","cr_raw":0.465,"pos_mean_cr":0.647,"vor":68.6,"repl_pts":133.2,"ppg":11.87,"sd":6.41,"rely":86,"alt":["Travis Etienne Jr","ETN"]},{"name":"D'Andre Swift","team":"CHI","pos":"RB","pts":201.1,"rec":39.0,"touches":272.0,"detail":"1049 rush yd, 7 rush TD, 39 rec, 316 rec yd","adp":43.2,"cr":0.568,"ppg25":14.3,"star":1,"stiff":1,"proven":true,"span":"2025","cr_raw":0.513,"pos_mean_cr":0.647,"vor":67.9,"repl_pts":133.2,"ppg":11.83,"sd":6.72,"rely":81},{"name":"Quinshon Judkins","team":"CLE","pos":"RB","pts":190.1,"rec":30.0,"touches":305.0,"detail":"1098 rush yd, 7 rush TD, 30 rec, 205 rec yd","adp":51.5,"cr":0.63,"ppg25":12.1,"star":1,"stiff":2,"proven":true,"span":"2025","cr_raw":0.619,"pos_mean_cr":0.647,"vor":56.9,"repl_pts":133.2,"ppg":11.18,"sd":7.04,"rely":69},{"name":"David Montgomery","team":"HOU","pos":"RB","pts":180.3,"rec":34.0,"touches":251.0,"detail":"935 rush yd, 7 rush TD, 34 rec, 244 rec yd","adp":55.5,"cr":0.669,"ppg25":9.8,"star":1,"stiff":2,"proven":true,"span":"2025","cr_raw":0.685,"pos_mean_cr":0.647,"vor":47.1,"repl_pts":133.2,"ppg":10.61,"sd":7.1,"rely":62},{"name":"Tony Pollard","team":"TEN","pos":"RB","pts":178.3,"rec":32.0,"touches":274.0,"detail":"1065 rush yd, 5 rush TD, 32 rec, 227 rec yd","adp":68.0,"cr":0.569,"ppg25":10.9,"star":1,"stiff":0,"proven":true,"span":"2025","cr_raw":0.514,"pos_mean_cr":0.647,"vor":45.1,"repl_pts":133.2,"ppg":10.49,"sd":5.97,"rely":81},{"name":"Jaylen Warren","team":"PIT","pos":"RB","pts":178.4,"rec":41.0,"touches":231.0,"detail":"854 rush yd, 5 rush TD, 41 rec, 329 rec yd","adp":61.7,"cr":0.542,"ppg25":13.6,"star":1,"stiff":0,"proven":true,"span":"2025","cr_raw":0.468,"pos_mean_cr":0.647,"vor":45.2,"repl_pts":133.2,"ppg":10.49,"sd":5.69,"rely":86},{"name":"TreVeyon Henderson","team":"NE","pos":"RB","pts":174.0,"rec":34.0,"touches":216.0,"detail":"856 rush yd, 7 rush TD, 34 rec, 257 rec yd","adp":63.5,"cr":0.731,"ppg25":12.1,"star":3,"stiff":2,"proven":true,"span":"2025","cr_raw":0.791,"pos_mean_cr":0.647,"vor":40.8,"repl_pts":133.2,"ppg":10.24,"sd":7.49,"rely":50},{"name":"Rhamondre Stevenson","team":"NE","pos":"RB","pts":169.6,"rec":40.0,"touches":203.0,"detail":"735 rush yd, 7 rush TD, 40 rec, 302 rec yd","adp":63.2,"cr":0.743,"ppg25":12.8,"star":2,"stiff":2,"proven":true,"span":"2025","cr_raw":0.811,"pos_mean_cr":0.647,"vor":36.4,"repl_pts":133.2,"ppg":9.98,"sd":7.42,"rely":48},{"name":"Jadarian Price","team":"SEA","pos":"RB","pts":167.4,"rec":31.0,"touches":226.0,"detail":"837 rush yd, 7 rush TD, 31 rec, 226 rec yd","adp":73.3,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":34.2,"repl_pts":133.2,"ppg":9.85,"sd":6.37,"rely":66,"rookie":true,"notes":["Rookie - reliability figure is a positional placeholder, not measured."]},{"name":"J.K. Dobbins","team":"DEN","pos":"RB","pts":162.9,"rec":16.0,"touches":222.0,"detail":"988 rush yd, 7 rush TD, 16 rec, 104 rec yd","adp":77.5,"cr":0.603,"ppg25":11.6,"star":0,"stiff":0,"proven":true,"span":"2025","cr_raw":0.572,"pos_mean_cr":0.647,"vor":29.7,"repl_pts":133.2,"ppg":9.58,"sd":5.78,"rely":74},{"name":"Chuba Hubbard","team":"CAR","pos":"RB","pts":159.1,"rec":34.0,"touches":226.0,"detail":"767 rush yd, 6 rush TD, 34 rec, 258 rec yd","adp":86.2,"cr":0.715,"ppg25":8.4,"star":1,"stiff":7,"proven":true,"span":"2025","cr_raw":0.764,"pos_mean_cr":0.647,"vor":25.9,"repl_pts":133.2,"ppg":9.36,"sd":6.69,"rely":53},{"name":"Rico Dowdle","team":"PIT","pos":"RB","pts":149.1,"rec":30.0,"touches":216.0,"detail":"801 rush yd, 5 rush TD, 30 rec, 203 rec yd","adp":74.5,"cr":0.719,"ppg25":12.7,"star":3,"stiff":3,"proven":true,"span":"2025","cr_raw":0.77,"pos_mean_cr":0.647,"vor":15.9,"repl_pts":133.2,"ppg":8.77,"sd":6.31,"rely":52},{"name":"Rachaad White","team":"WAS","pos":"RB","pts":146.1,"rec":42.0,"touches":173.0,"detail":"539 rush yd, 5 rush TD, 42 rec, 310 rec yd","adp":119.4,"cr":0.651,"ppg25":8.4,"star":0,"stiff":4,"proven":true,"span":"2025","cr_raw":0.654,"pos_mean_cr":0.647,"vor":12.9,"repl_pts":133.2,"ppg":8.59,"sd":5.59,"rely":65},{"name":"Jacory Croskey-Merritt","team":"WAS","pos":"RB","pts":133.2,"rec":12.0,"touches":191.0,"detail":"788 rush yd, 7 rush TD, 12 rec, 84 rec yd","adp":102.4,"cr":0.798,"ppg25":8.3,"star":1,"stiff":5,"proven":true,"span":"2025","cr_raw":0.905,"pos_mean_cr":0.647,"vor":0.0,"repl_pts":133.2,"ppg":7.84,"sd":6.26,"rely":38},{"name":"Jonathon Brooks","team":"CAR","pos":"RB","pts":131.5,"rec":32.0,"touches":190.0,"detail":"646 rush yd, 4 rush TD, 32 rec, 229 rec yd","adp":90.2,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-1.7,"repl_pts":133.2,"ppg":7.74,"sd":5.01,"rely":66},{"name":"Aaron Jones","team":"MIN","pos":"RB","pts":127.6,"rec":37.0,"touches":180.0,"detail":"602 rush yd, 3 rush TD, 37 rec, 268 rec yd","adp":109.0,"cr":0.621,"ppg25":9.9,"star":0,"stiff":2,"proven":true,"span":"2025","cr_raw":0.603,"pos_mean_cr":0.647,"vor":-5.6,"repl_pts":133.2,"ppg":7.51,"sd":4.66,"rely":71,"alt":["Aaron Jones Sr"]},{"name":"RJ Harvey","team":"DEN","pos":"RB","pts":126.4,"rec":44.0,"touches":140.0,"detail":"373 rush yd, 3 rush TD, 44 rec, 326 rec yd","adp":102.5,"cr":0.637,"ppg25":12.2,"star":2,"stiff":2,"proven":true,"span":"2025","cr_raw":0.63,"pos_mean_cr":0.647,"vor":-6.8,"repl_pts":133.2,"ppg":7.44,"sd":4.74,"rely":68},{"name":"Kyle Monangai","team":"CHI","pos":"RB","pts":125.6,"rec":20.0,"touches":196.0,"detail":"775 rush yd, 4 rush TD, 20 rec, 162 rec yd","adp":98.6,"cr":0.694,"ppg25":8.6,"star":1,"stiff":5,"proven":true,"span":"2025","cr_raw":0.728,"pos_mean_cr":0.647,"vor":-7.6,"repl_pts":133.2,"ppg":7.39,"sd":5.13,"rely":57},{"name":"Blake Corum","team":"LAR","pos":"RB","pts":124.1,"rec":13.0,"touches":172.0,"detail":"745 rush yd, 6 rush TD, 13 rec, 89 rec yd","adp":121.9,"cr":0.797,"ppg25":7.2,"star":1,"stiff":6,"proven":true,"span":"2025","cr_raw":0.903,"pos_mean_cr":0.647,"vor":-9.1,"repl_pts":133.2,"ppg":7.3,"sd":5.82,"rely":38},{"name":"Jordan Mason","team":"MIN","pos":"RB","pts":123.2,"rec":12.0,"touches":201.0,"detail":"831 rush yd, 5 rush TD, 12 rec, 62 rec yd","adp":114.4,"cr":0.68,"ppg25":8.1,"star":0,"stiff":3,"proven":true,"span":"2025","cr_raw":0.704,"pos_mean_cr":0.647,"vor":-10.0,"repl_pts":133.2,"ppg":7.25,"sd":4.93,"rely":60},{"name":"Kenneth Gainwell","team":"TB","pos":"RB","pts":118.5,"rec":37.0,"touches":137.0,"detail":"439 rush yd, 3 rush TD, 37 rec, 275 rec yd","adp":100.9,"cr":0.69,"ppg25":13.0,"star":3,"stiff":1,"proven":true,"span":"2025","cr_raw":0.72,"pos_mean_cr":0.647,"vor":-14.7,"repl_pts":133.2,"ppg":6.97,"sd":4.81,"rely":58,"alt":["Kenny Gainwell"]},{"name":"Alvin Kamara","team":"NO","pos":"RB","pts":105.8,"rec":34.0,"touches":147.0,"detail":"428 rush yd, 2 rush TD, 34 rec, 235 rec yd","adp":156.8,"cr":0.648,"ppg25":9.2,"star":0,"stiff":1,"proven":true,"span":"2025","cr_raw":0.649,"pos_mean_cr":0.647,"vor":-27.4,"repl_pts":133.2,"ppg":6.22,"sd":4.03,"rely":66},{"name":"Woody Marks","team":"HOU","pos":"RB","pts":103.9,"rec":27.0,"touches":162.0,"detail":"527 rush yd, 2 rush TD, 27 rec, 214 rec yd","adp":140.9,"cr":0.703,"ppg25":9.4,"star":0,"stiff":2,"proven":true,"span":"2025","cr_raw":0.743,"pos_mean_cr":0.647,"vor":-29.3,"repl_pts":133.2,"ppg":6.11,"sd":4.3,"rely":55},{"name":"Zach Charbonnet","team":"SEA","pos":"RB","pts":99.2,"rec":19.0,"touches":147.0,"detail":"537 rush yd, 3 rush TD, 19 rec, 135 rec yd","adp":133.5,"cr":0.632,"ppg25":11.3,"star":0,"stiff":2,"proven":true,"span":"2025","cr_raw":0.621,"pos_mean_cr":0.647,"vor":-34.0,"repl_pts":133.2,"ppg":5.84,"sd":3.69,"rely":69},{"name":"Tyjae Spears","team":"TEN","pos":"RB","pts":95.6,"rec":38.0,"touches":124.0,"detail":"344 rush yd, 2 rush TD, 38 rec, 255 rec yd","adp":139.6,"cr":0.684,"ppg25":8.6,"star":0,"stiff":2,"proven":true,"span":"2025","cr_raw":0.71,"pos_mean_cr":0.647,"vor":-37.6,"repl_pts":133.2,"ppg":5.62,"sd":3.84,"rely":59},{"name":"Dylan Sampson","team":"CLE","pos":"RB","pts":93.0,"rec":40.0,"touches":101.0,"detail":"245 rush yd, 1 rush TD, 40 rec, 316 rec yd","adp":178.2,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-40.2,"repl_pts":133.2,"ppg":5.47,"sd":3.54,"rely":66},{"name":"Chris Rodriguez Jr.","team":"JAC","pos":"RB","pts":90.7,"rec":10.0,"touches":139.0,"detail":"556 rush yd, 4 rush TD, 10 rec, 76 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-42.5,"repl_pts":133.2,"ppg":5.34,"sd":3.45,"rely":66},{"name":"Tyrone Tracy Jr.","team":"NYG","pos":"RB","pts":90.3,"rec":28.0,"touches":118.0,"detail":"380 rush yd, 2 rush TD, 28 rec, 215 rec yd","adp":null,"cr":0.705,"ppg25":10.7,"star":2,"stiff":2,"proven":true,"span":"2025","cr_raw":0.746,"pos_mean_cr":0.647,"vor":-42.9,"repl_pts":133.2,"ppg":5.31,"sd":3.74,"rely":55},{"name":"Isiah Pacheco","team":"DET","pos":"RB","pts":89.3,"rec":20.0,"touches":142.0,"detail":"489 rush yd, 3 rush TD, 20 rec, 139 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-43.9,"repl_pts":133.2,"ppg":5.25,"sd":3.4,"rely":66},{"name":"Ty Johnson","team":"BUF","pos":"RB","pts":79.8,"rec":29.0,"touches":81.0,"detail":"212 rush yd, 1 rush TD, 29 rec, 270 rec yd","adp":null,"cr":0.793,"ppg25":5.9,"star":0,"stiff":7,"proven":true,"span":"2025","cr_raw":0.896,"pos_mean_cr":0.647,"vor":-53.4,"repl_pts":133.2,"ppg":4.69,"sd":3.72,"rely":39},{"name":"Brian Robinson Jr.","team":"ATL","pos":"RB","pts":79.3,"rec":9.0,"touches":116.0,"detail":"462 rush yd, 4 rush TD, 9 rec, 58 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-53.9,"repl_pts":133.2,"ppg":4.66,"sd":3.02,"rely":66},{"name":"Tyler Allgeier","team":"ARI","pos":"RB","pts":77.3,"rec":18.0,"touches":116.0,"detail":"391 rush yd, 3 rush TD, 18 rec, 124 rec yd","adp":null,"cr":0.701,"ppg25":7.2,"star":0,"stiff":7,"proven":true,"span":"2025","cr_raw":0.739,"pos_mean_cr":0.647,"vor":-55.9,"repl_pts":133.2,"ppg":4.55,"sd":3.19,"rely":56},{"name":"Justice Hill","team":"BAL","pos":"RB","pts":77.4,"rec":28.0,"touches":79.0,"detail":"241 rush yd, 2 rush TD, 28 rec, 221 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-55.8,"repl_pts":133.2,"ppg":4.55,"sd":2.94,"rely":66},{"name":"MarShawn Lloyd","team":"GB","pos":"RB","pts":67.5,"rec":10.0,"touches":99.0,"detail":"383 rush yd, 3 rush TD, 10 rec, 72 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-65.7,"repl_pts":133.2,"ppg":3.97,"sd":2.57,"rely":66},{"name":"Braelon Allen","team":"NYJ","pos":"RB","pts":67.1,"rec":10.0,"touches":101.0,"detail":"372 rush yd, 3 rush TD, 10 rec, 80 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-66.1,"repl_pts":133.2,"ppg":3.95,"sd":2.56,"rely":66},{"name":"Samaje Perine","team":"CIN","pos":"RB","pts":65.3,"rec":16.0,"touches":88.0,"detail":"304 rush yd, 2 rush TD, 16 rec, 98 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-67.9,"repl_pts":133.2,"ppg":3.84,"sd":2.48,"rely":66},{"name":"Keaton Mitchell","team":"LAC","pos":"RB","pts":61.0,"rec":19.0,"touches":58.0,"detail":"194 rush yd, 2 rush TD, 19 rec, 147 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-72.2,"repl_pts":133.2,"ppg":3.59,"sd":2.32,"rely":66},{"name":"Ray Davis","team":"BUF","pos":"RB","pts":60.7,"rec":12.0,"touches":74.0,"detail":"281 rush yd, 2 rush TD, 12 rec, 94 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-72.5,"repl_pts":133.2,"ppg":3.57,"sd":2.31,"rely":66},{"name":"Tank Bigsby","team":"PHI","pos":"RB","pts":60.1,"rec":5.0,"touches":92.0,"detail":"375 rush yd, 3 rush TD, 5 rec, 31 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-73.1,"repl_pts":133.2,"ppg":3.54,"sd":2.29,"rely":66},{"name":"Sean Tucker","team":"TB","pos":"RB","pts":55.1,"rec":9.0,"touches":79.0,"detail":"267 rush yd, 3 rush TD, 9 rec, 67 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-78.1,"repl_pts":133.2,"ppg":3.24,"sd":2.1,"rely":66},{"name":"Mike Washington Jr.","team":"LV","pos":"RB","pts":53.1,"rec":7.0,"touches":92.0,"detail":"339 rush yd, 2 rush TD, 7 rec, 47 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-80.1,"repl_pts":133.2,"ppg":3.12,"sd":2.02,"rely":66},{"name":"Kimani Vidal","team":"LAC","pos":"RB","pts":52.6,"rec":11.0,"touches":77.0,"detail":"272 rush yd, 2 rush TD, 11 rec, 87 rec yd","adp":null,"cr":0.8,"ppg25":9.1,"star":1,"stiff":4,"proven":true,"span":"2025","cr_raw":0.909,"pos_mean_cr":0.647,"vor":-80.6,"repl_pts":133.2,"ppg":3.09,"sd":2.47,"rely":37},{"name":"Emari Demercado","team":"KC","pos":"RB","pts":51.8,"rec":19.0,"touches":70.0,"detail":"235 rush yd, 1 rush TD, 19 rec, 135 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-81.4,"repl_pts":133.2,"ppg":3.05,"sd":1.97,"rely":66},{"name":"Jonah Coleman","team":"DEN","pos":"RB","pts":51.2,"rec":11.0,"touches":77.0,"detail":"277 rush yd, 2 rush TD, 11 rec, 68 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-82.0,"repl_pts":133.2,"ppg":3.01,"sd":1.95,"rely":66},{"name":"Jaylen Wright","team":"MIA","pos":"RB","pts":48.5,"rec":9.0,"touches":70.0,"detail":"256 rush yd, 2 rush TD, 9 rec, 71 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-84.7,"repl_pts":133.2,"ppg":2.85,"sd":1.84,"rely":66},{"name":"George Holani","team":"SEA","pos":"RB","pts":47.9,"rec":11.0,"touches":69.0,"detail":"233 rush yd, 2 rush TD, 11 rec, 78 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-85.3,"repl_pts":133.2,"ppg":2.82,"sd":1.82,"rely":66},{"name":"Najee Harris","team":"NYG","pos":"RB","pts":41.2,"rec":5.0,"touches":63.0,"detail":"233 rush yd, 2 rush TD, 5 rec, 41 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-92.0,"repl_pts":133.2,"ppg":2.42,"sd":1.57,"rely":66},{"name":"Jaydon Blue","team":"DAL","pos":"RB","pts":40.2,"rec":11.0,"touches":72.0,"detail":"224 rush yd, 1 rush TD, 11 rec, 71 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-93.0,"repl_pts":133.2,"ppg":2.36,"sd":1.53,"rely":66},{"name":"Jordan James","team":"SF","pos":"RB","pts":39.4,"rec":7.0,"touches":66.0,"detail":"259 rush yd, 1 rush TD, 7 rec, 47 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-93.8,"repl_pts":133.2,"ppg":2.32,"sd":1.5,"rely":66},{"name":"Isaiah Davis","team":"NYJ","pos":"RB","pts":37.7,"rec":14.0,"touches":50.0,"detail":"145 rush yd, 1 rush TD, 14 rec, 107 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-95.5,"repl_pts":133.2,"ppg":2.22,"sd":1.44,"rely":66},{"name":"Emmett Johnson","team":"KC","pos":"RB","pts":37.2,"rec":11.0,"touches":59.0,"detail":"186 rush yd, 1 rush TD, 11 rec, 77 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-96.0,"repl_pts":133.2,"ppg":2.19,"sd":1.42,"rely":66},{"name":"LeQuint Allen","team":"JAC","pos":"RB","pts":37.3,"rec":20.0,"touches":41.0,"detail":"82 rush yd, 0 rush TD, 20 rec, 135 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-95.9,"repl_pts":133.2,"ppg":2.19,"sd":1.42,"rely":66},{"name":"Jeremy McNichols","team":"WAS","pos":"RB","pts":35.7,"rec":16.0,"touches":37.0,"detail":"105 rush yd, 1 rush TD, 16 rec, 116 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-97.5,"repl_pts":133.2,"ppg":2.1,"sd":1.36,"rely":66},{"name":"Seth McGowan","team":"IND","pos":"RB","pts":35.4,"rec":11.0,"touches":53.0,"detail":"168 rush yd, 1 rush TD, 11 rec, 77 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-97.8,"repl_pts":133.2,"ppg":2.08,"sd":1.35,"rely":66},{"name":"Will Shipley","team":"PHI","pos":"RB","pts":32.5,"rec":11.0,"touches":45.0,"detail":"135 rush yd, 1 rush TD, 11 rec, 80 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-100.7,"repl_pts":133.2,"ppg":1.91,"sd":1.24,"rely":66},{"name":"Ollie Gordon II","team":"MIA","pos":"RB","pts":32.3,"rec":8.0,"touches":54.0,"detail":"181 rush yd, 1 rush TD, 8 rec, 48 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-100.9,"repl_pts":133.2,"ppg":1.9,"sd":1.23,"rely":66},{"name":"James Conner","team":"ARI","pos":"RB","pts":30.5,"rec":8.0,"touches":44.0,"detail":"142 rush yd, 1 rush TD, 8 rec, 68 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-102.7,"repl_pts":133.2,"ppg":1.79,"sd":1.16,"rely":66},{"name":"Kaytron Allen","team":"WAS","pos":"RB","pts":28.3,"rec":7.0,"touches":44.0,"detail":"148 rush yd, 1 rush TD, 7 rec, 45 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-104.9,"repl_pts":133.2,"ppg":1.66,"sd":1.07,"rely":66},{"name":"Demond Claiborne","team":"MIN","pos":"RB","pts":25.0,"rec":4.0,"touches":40.0,"detail":"145 rush yd, 1 rush TD, 4 rec, 29 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-108.2,"repl_pts":133.2,"ppg":1.47,"sd":0.95,"rely":66},{"name":"Raheim Sanders","team":"CLE","pos":"RB","pts":23.3,"rec":4.0,"touches":38.0,"detail":"131 rush yd, 1 rush TD, 4 rec, 26 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-109.9,"repl_pts":133.2,"ppg":1.37,"sd":0.89,"rely":66},{"name":"DJ Giddens","team":"IND","pos":"RB","pts":23.1,"rec":2.0,"touches":40.0,"detail":"148 rush yd, 1 rush TD, 2 rec, 17 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-110.1,"repl_pts":133.2,"ppg":1.36,"sd":0.88,"rely":66},{"name":"Chris Brooks","team":"GB","pos":"RB","pts":21.6,"rec":6.0,"touches":27.0,"detail":"85 rush yd, 1 rush TD, 6 rec, 44 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-111.6,"repl_pts":133.2,"ppg":1.27,"sd":0.82,"rely":66},{"name":"Kaelon Black","team":"SF","pos":"RB","pts":19.7,"rec":2.0,"touches":30.0,"detail":"114 rush yd, 1 rush TD, 2 rec, 16 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-113.5,"repl_pts":133.2,"ppg":1.16,"sd":0.75,"rely":66},{"name":"Rasheen Ali","team":"BAL","pos":"RB","pts":15.3,"rec":6.0,"touches":26.0,"detail":"81 rush yd, 0 rush TD, 6 rec, 45 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-117.9,"repl_pts":133.2,"ppg":0.9,"sd":0.58,"rely":66},{"name":"Kaleb Johnson","team":"PIT","pos":"RB","pts":13.1,"rec":2.0,"touches":31.0,"detail":"111 rush yd, 0 rush TD, 2 rec, 13 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-120.1,"repl_pts":133.2,"ppg":0.77,"sd":0.5,"rely":66},{"name":"Trevor Etienne","team":"CAR","pos":"RB","pts":12.5,"rec":4.0,"touches":22.0,"detail":"82 rush yd, 0 rush TD, 4 rec, 25 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-120.7,"repl_pts":133.2,"ppg":0.74,"sd":0.48,"rely":66},{"name":"Jawhar Jordan","team":"HOU","pos":"RB","pts":11.7,"rec":3.0,"touches":24.0,"detail":"88 rush yd, 0 rush TD, 3 rec, 17 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-121.5,"repl_pts":133.2,"ppg":0.69,"sd":0.45,"rely":66},{"name":"Roschon Johnson","team":"CHI","pos":"RB","pts":10.1,"rec":2.0,"touches":21.0,"detail":"81 rush yd, 0 rush TD, 2 rec, 12 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-123.1,"repl_pts":133.2,"ppg":0.59,"sd":0.38,"rely":66},{"name":"Emanuel Wilson","team":"SEA","pos":"RB","pts":9.9,"rec":2.0,"touches":21.0,"detail":"74 rush yd, 0 rush TD, 2 rec, 17 rec yd","adp":null,"cr":0.999,"ppg25":5.6,"star":1,"stiff":10,"proven":true,"span":"2025","cr_raw":1.248,"pos_mean_cr":0.647,"vor":-123.3,"repl_pts":133.2,"ppg":0.58,"sd":0.58,"rely":0},{"name":"Trey Benson","team":"ARI","pos":"RB","pts":9.8,"rec":0.0,"touches":23.0,"detail":"100 rush yd, 0 rush TD, 0 rec, 0 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-123.4,"repl_pts":133.2,"ppg":0.58,"sd":0.38,"rely":66},{"name":"Tahj Brooks","team":"CIN","pos":"RB","pts":9.2,"rec":1.0,"touches":22.0,"detail":"82 rush yd, 0 rush TD, 1 rec, 7 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-124.0,"repl_pts":133.2,"ppg":0.54,"sd":0.35,"rely":66},{"name":"Kendre Miller","team":"NO","pos":"RB","pts":8.5,"rec":2.0,"touches":19.0,"detail":"65 rush yd, 0 rush TD, 2 rec, 12 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-124.7,"repl_pts":133.2,"ppg":0.5,"sd":0.32,"rely":66},{"name":"Nicholas Singleton","team":"TEN","pos":"RB","pts":8.3,"rec":2.0,"touches":18.0,"detail":"64 rush yd, 0 rush TD, 2 rec, 11 rec yd","adp":null,"proven":false,"cr":0.647,"cr_raw":null,"pos_mean_cr":0.647,"vor":-124.9,"repl_pts":133.2,"ppg":0.49,"sd":0.32,"rely":66},{"name":"Puka Nacua","team":"LAR","pos":"WR","pts":274.1,"rec":116.0,"detail":"116 rec, 1561 rec yd, 9 rec TD","adp":3.0,"cr":0.552,"ppg25":23.4,"star":9,"stiff":1,"proven":true,"span":"2025","cr_raw":0.487,"pos_mean_cr":0.645,"vor":129.5,"repl_pts":144.6,"ppg":16.12,"sd":8.9,"rely":77},{"name":"Ja'Marr Chase","team":"CIN","pos":"WR","pts":270.6,"rec":116.0,"detail":"116 rec, 1474 rec yd, 11 rec TD","adp":3.9,"cr":0.596,"ppg25":19.6,"star":7,"stiff":3,"proven":true,"span":"2025","cr_raw":0.562,"pos_mean_cr":0.645,"vor":126.0,"repl_pts":144.6,"ppg":15.92,"sd":9.49,"rely":65},{"name":"Amon-Ra St. Brown","team":"DET","pos":"WR","pts":256.6,"rec":119.0,"detail":"119 rec, 1377 rec yd, 10 rec TD","adp":8.0,"cr":0.603,"ppg25":19.1,"star":5,"stiff":2,"proven":true,"span":"2025","cr_raw":0.573,"pos_mean_cr":0.645,"vor":112.0,"repl_pts":144.6,"ppg":15.09,"sd":9.1,"rely":62,"alt":["ARSB","Saint Brown","Sun God"]},{"name":"Jaxon Smith-Njigba","team":"SEA","pos":"WR","pts":252.1,"rec":105.0,"detail":"105 rec, 1521 rec yd, 8 rec TD","adp":5.2,"cr":0.474,"ppg25":21.2,"star":4,"stiff":1,"proven":true,"span":"2025","cr_raw":0.353,"pos_mean_cr":0.645,"vor":107.5,"repl_pts":144.6,"ppg":14.83,"sd":7.03,"rely":100,"notes":["Best reliability of any high-volume receiver in 2025, and the projection is top-five. Rare combination."],"alt":["JSN"]},{"name":"Drake London","team":"ATL","pos":"WR","pts":221.7,"rec":99.0,"detail":"99 rec, 1312 rec yd, 7 rec TD","adp":12.0,"cr":0.697,"ppg25":16.8,"star":4,"stiff":3,"proven":true,"span":"2025","cr_raw":0.734,"pos_mean_cr":0.645,"vor":77.1,"repl_pts":144.6,"ppg":13.04,"sd":9.09,"rely":35},{"name":"Justin Jefferson","team":"MIN","pos":"WR","pts":217.3,"rec":95.0,"detail":"95 rec, 1288 rec yd, 7 rec TD","adp":14.4,"cr":0.553,"ppg25":11.9,"star":0,"stiff":4,"proven":true,"span":"2025","cr_raw":0.489,"pos_mean_cr":0.645,"vor":72.7,"repl_pts":144.6,"ppg":12.78,"sd":7.07,"rely":77},{"name":"CeeDee Lamb","team":"DAL","pos":"WR","pts":208.2,"rec":87.0,"detail":"87 rec, 1177 rec yd, 8 rec TD","adp":12.5,"cr":0.614,"ppg25":14.4,"star":1,"stiff":2,"proven":true,"span":"2025","cr_raw":0.593,"pos_mean_cr":0.645,"vor":63.6,"repl_pts":144.6,"ppg":12.25,"sd":7.52,"rely":59},{"name":"Chris Olave","team":"NO","pos":"WR","pts":204.2,"rec":97.0,"detail":"97 rec, 1147 rec yd, 7 rec TD","adp":23.2,"cr":0.57,"ppg25":16.8,"star":3,"stiff":1,"proven":true,"span":"2025","cr_raw":0.518,"pos_mean_cr":0.645,"vor":59.6,"repl_pts":144.6,"ppg":12.01,"sd":6.85,"rely":72},{"name":"Rashee Rice","team":"KC","pos":"WR","pts":200.7,"rec":96.0,"detail":"96 rec, 1117 rec yd, 7 rec TD","adp":15.2,"cr":0.612,"ppg25":18.8,"star":2,"stiff":0,"proven":true,"span":"2025","cr_raw":0.589,"pos_mean_cr":0.645,"vor":56.1,"repl_pts":144.6,"ppg":11.81,"sd":7.23,"rely":60,"notes":["18.8 points per game in 2025 with zero bust weeks, though he carries suspension and health questions."]},{"name":"A.J. Brown","team":"NE","pos":"WR","pts":199.5,"rec":86.0,"detail":"86 rec, 1155 rec yd, 7 rec TD","adp":20.0,"cr":0.68,"ppg25":14.7,"star":4,"stiff":4,"proven":true,"span":"2025","cr_raw":0.704,"pos_mean_cr":0.645,"vor":54.9,"repl_pts":144.6,"ppg":11.74,"sd":7.98,"rely":40},{"name":"Nico Collins","team":"HOU","pos":"WR","pts":199.1,"rec":79.0,"detail":"79 rec, 1186 rec yd, 7 rec TD","adp":18.4,"cr":0.573,"ppg25":15.1,"star":3,"stiff":2,"proven":true,"span":"2025","cr_raw":0.522,"pos_mean_cr":0.645,"vor":54.5,"repl_pts":144.6,"ppg":11.71,"sd":6.71,"rely":71},{"name":"Garrett Wilson","team":"NYJ","pos":"WR","pts":194.5,"rec":100.0,"detail":"100 rec, 1155 rec yd, 5 rec TD","adp":31.1,"cr":0.651,"ppg25":14.2,"star":1,"stiff":3,"proven":true,"span":"2025","cr_raw":0.656,"pos_mean_cr":0.645,"vor":49.9,"repl_pts":144.6,"ppg":11.44,"sd":7.45,"rely":49},{"name":"Zay Flowers","team":"BAL","pos":"WR","pts":187.2,"rec":79.0,"detail":"79 rec, 1117 rec yd, 6 rec TD","adp":25.2,"cr":0.573,"ppg25":14.3,"star":2,"stiff":2,"proven":true,"span":"2025","cr_raw":0.523,"pos_mean_cr":0.645,"vor":42.6,"repl_pts":144.6,"ppg":11.01,"sd":6.31,"rely":71},{"name":"Malik Nabers","team":"NYG","pos":"WR","pts":189.2,"rec":81.0,"detail":"81 rec, 1077 rec yd, 7 rec TD","adp":26.2,"cr":0.65,"ppg25":17.4,"proven":true,"span":"3yr","cr_raw":0.653,"pos_mean_cr":0.645,"vor":44.6,"repl_pts":144.6,"ppg":11.13,"sd":7.23,"rely":49,"notes":["Tore his ACL four games into 2025, so there is no recent week-by-week record. Reliability here is measured across 2023-25 instead."]},{"name":"DeVonta Smith","team":"PHI","pos":"WR","pts":188.7,"rec":83.0,"detail":"83 rec, 1122 rec yd, 6 rec TD","adp":31.6,"cr":0.652,"ppg25":11.9,"star":1,"stiff":6,"proven":true,"span":"2025","cr_raw":0.657,"pos_mean_cr":0.645,"vor":44.1,"repl_pts":144.6,"ppg":11.1,"sd":7.24,"rely":48},{"name":"George Pickens","team":"DAL","pos":"WR","pts":188.2,"rec":74.0,"detail":"74 rec, 1102 rec yd, 7 rec TD","adp":19.9,"cr":0.596,"ppg25":17.2,"star":5,"stiff":3,"proven":true,"span":"2025","cr_raw":0.562,"pos_mean_cr":0.645,"vor":43.6,"repl_pts":144.6,"ppg":11.07,"sd":6.6,"rely":65},{"name":"Jameson Williams","team":"DET","pos":"WR","pts":183.6,"rec":66.0,"detail":"66 rec, 1088 rec yd, 7 rec TD","adp":38.7,"cr":0.673,"ppg25":12.9,"star":3,"stiff":7,"proven":true,"span":"2025","cr_raw":0.693,"pos_mean_cr":0.645,"vor":39.0,"repl_pts":144.6,"ppg":10.8,"sd":7.27,"rely":42},{"name":"Davante Adams","team":"LAR","pos":"WR","pts":185.1,"rec":70.0,"detail":"70 rec, 911 rec yd, 10 rec TD","adp":37.9,"cr":0.59,"ppg25":15.9,"star":1,"stiff":0,"proven":true,"span":"2025","cr_raw":0.552,"pos_mean_cr":0.645,"vor":40.5,"repl_pts":144.6,"ppg":10.89,"sd":6.43,"rely":66},{"name":"Emeka Egbuka","team":"TB","pos":"WR","pts":184.6,"rec":78.0,"detail":"78 rec, 1046 rec yd, 7 rec TD","adp":33.7,"cr":0.696,"ppg25":11.5,"star":3,"stiff":6,"proven":true,"span":"2025","cr_raw":0.732,"pos_mean_cr":0.645,"vor":40.0,"repl_pts":144.6,"ppg":10.86,"sd":7.56,"rely":35},{"name":"Tetairoa McMillan","team":"CAR","pos":"WR","pts":182.1,"rec":78.0,"detail":"78 rec, 1081 rec yd, 6 rec TD","adp":30.7,"cr":0.601,"ppg25":12.4,"star":1,"stiff":3,"proven":true,"span":"2025","cr_raw":0.57,"pos_mean_cr":0.645,"vor":37.5,"repl_pts":144.6,"ppg":10.71,"sd":6.44,"rely":63},{"name":"Christian Watson","team":"GB","pos":"WR","pts":171.7,"rec":65.0,"detail":"65 rec, 982 rec yd, 7 rec TD","adp":56.0,"cr":0.658,"ppg25":13.2,"star":1,"stiff":2,"proven":true,"span":"2025","cr_raw":0.668,"pos_mean_cr":0.645,"vor":27.1,"repl_pts":144.6,"ppg":10.1,"sd":6.65,"rely":47},{"name":"Mike Evans","team":"SF","pos":"WR","pts":171.0,"rec":69.0,"detail":"69 rec, 955 rec yd, 7 rec TD","adp":54.2,"cr":0.651,"ppg25":15.6,"proven":true,"span":"3yr","cr_raw":0.655,"pos_mean_cr":0.645,"vor":26.4,"repl_pts":144.6,"ppg":10.06,"sd":6.55,"rely":49,"notes":["Broke his collarbone and played only four games in 2025. Reliability measured across 2023-25."]},{"name":"D.J. Moore","team":"BUF","pos":"WR","pts":166.8,"rec":71.0,"detail":"71 rec, 955 rec yd, 6 rec TD","adp":44.9,"cr":0.747,"ppg25":10.0,"star":1,"stiff":6,"proven":true,"span":"2025","cr_raw":0.819,"pos_mean_cr":0.645,"vor":22.2,"repl_pts":144.6,"ppg":9.81,"sd":7.33,"rely":21,"alt":["DJ Moore"]},{"name":"Tee Higgins","team":"CIN","pos":"WR","pts":170.1,"rec":65.0,"detail":"65 rec, 906 rec yd, 8 rec TD","adp":35.9,"cr":0.641,"ppg25":14.1,"star":2,"stiff":3,"proven":true,"span":"2025","cr_raw":0.639,"pos_mean_cr":0.645,"vor":25.5,"repl_pts":144.6,"ppg":10.01,"sd":6.42,"rely":51},{"name":"Jaylen Waddle","team":"DEN","pos":"WR","pts":169.7,"rec":72.0,"detail":"72 rec, 987 rec yd, 6 rec TD","adp":47.3,"cr":0.619,"ppg25":12.1,"star":1,"stiff":4,"proven":true,"span":"2025","cr_raw":0.6,"pos_mean_cr":0.645,"vor":25.1,"repl_pts":144.6,"ppg":9.98,"sd":6.18,"rely":58},{"name":"Ladd McConkey","team":"LAC","pos":"WR","pts":168.6,"rec":76.0,"detail":"76 rec, 956 rec yd, 6 rec TD","adp":41.0,"cr":0.639,"ppg25":11.3,"star":0,"stiff":5,"proven":true,"span":"2025","cr_raw":0.635,"pos_mean_cr":0.645,"vor":24.0,"repl_pts":144.6,"ppg":9.92,"sd":6.34,"rely":52},{"name":"Rome Odunze","team":"CHI","pos":"WR","pts":168.0,"rec":65.0,"detail":"65 rec, 945 rec yd, 7 rec TD","adp":48.9,"cr":0.725,"ppg25":12.2,"star":1,"stiff":5,"proven":true,"span":"2025","cr_raw":0.782,"pos_mean_cr":0.645,"vor":23.4,"repl_pts":144.6,"ppg":9.88,"sd":7.16,"rely":27},{"name":"Luther Burden III","team":"CHI","pos":"WR","pts":163.2,"rec":70.0,"detail":"70 rec, 926 rec yd, 6 rec TD","adp":57.6,"cr":0.789,"ppg25":8.5,"star":1,"stiff":6,"proven":true,"span":"2025","cr_raw":0.891,"pos_mean_cr":0.645,"vor":18.6,"repl_pts":144.6,"ppg":9.6,"sd":7.57,"rely":8},{"name":"DK Metcalf","team":"PIT","pos":"WR","pts":162.9,"rec":67.0,"detail":"67 rec, 944 rec yd, 6 rec TD","adp":64.1,"cr":0.595,"ppg25":12.5,"star":0,"stiff":2,"proven":true,"span":"2025","cr_raw":0.559,"pos_mean_cr":0.645,"vor":18.3,"repl_pts":144.6,"ppg":9.58,"sd":5.7,"rely":65},{"name":"Terry McLaurin","team":"WAS","pos":"WR","pts":161.2,"rec":65.0,"detail":"65 rec, 937 rec yd, 6 rec TD","adp":45.1,"cr":0.61,"ppg25":13.4,"proven":true,"span":"3yr","cr_raw":0.586,"pos_mean_cr":0.645,"vor":16.6,"repl_pts":144.6,"ppg":9.48,"sd":5.78,"rely":60,"notes":["Missed seven games in 2025 with a quad injury - the first significant absence of his career. Reliability measured across 2023-25."]},{"name":"Marvin Harrison Jr.","team":"ARI","pos":"WR","pts":160.3,"rec":64.0,"detail":"64 rec, 933 rec yd, 6 rec TD","adp":66.1,"cr":0.692,"ppg25":10.7,"star":0,"stiff":5,"proven":true,"span":"2025","cr_raw":0.726,"pos_mean_cr":0.645,"vor":15.7,"repl_pts":144.6,"ppg":9.43,"sd":6.53,"rely":37,"alt":["MHJ"]},{"name":"Courtland Sutton","team":"DEN","pos":"WR","pts":157.3,"rec":63.0,"detail":"63 rec, 848 rec yd, 7 rec TD","adp":59.1,"cr":0.606,"ppg25":12.9,"star":2,"stiff":4,"proven":true,"span":"2025","cr_raw":0.579,"pos_mean_cr":0.645,"vor":12.7,"repl_pts":144.6,"ppg":9.25,"sd":5.61,"rely":62},{"name":"Michael Pittman Jr.","team":"PIT","pos":"WR","pts":154.7,"rec":76.0,"detail":"76 rec, 877 rec yd, 5 rec TD","adp":81.1,"cr":0.636,"ppg25":11.9,"star":1,"stiff":8,"proven":true,"span":"2025","cr_raw":0.629,"pos_mean_cr":0.645,"vor":10.1,"repl_pts":144.6,"ppg":9.1,"sd":5.79,"rely":53,"alt":["Mike Pittman"]},{"name":"Alec Pierce","team":"IND","pos":"WR","pts":150.7,"rec":60.0,"detail":"60 rec, 917 rec yd, 5 rec TD","adp":60.9,"cr":0.687,"ppg25":12.2,"star":2,"stiff":4,"proven":true,"span":"2025","cr_raw":0.717,"pos_mean_cr":0.645,"vor":6.1,"repl_pts":144.6,"ppg":8.86,"sd":6.09,"rely":38},{"name":"Jayden Reed","team":"GB","pos":"WR","pts":144.6,"rec":66.0,"detail":"66 rec, 815 rec yd, 5 rec TD","adp":89.0,"cr":0.688,"ppg25":11.6,"proven":true,"span":"3yr","cr_raw":0.718,"pos_mean_cr":0.645,"vor":0.0,"repl_pts":144.6,"ppg":8.51,"sd":5.85,"rely":38,"notes":["No usable 2025 sample; reliability measured across 2023-25."]},{"name":"Carnell Tate","team":"TEN","pos":"WR","pts":148.2,"rec":65.0,"detail":"65 rec, 867 rec yd, 5 rec TD","adp":75.6,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":3.6,"repl_pts":144.6,"ppg":8.72,"sd":5.62,"rely":50,"rookie":true,"notes":["Rookie - reliability figure is a positional placeholder, not measured."]},{"name":"Jakobi Meyers","team":"JAC","pos":"WR","pts":141.0,"rec":67.0,"detail":"67 rec, 782 rec yd, 5 rec TD","adp":86.3,"cr":0.533,"ppg25":11.0,"star":0,"stiff":3,"proven":true,"span":"2025","cr_raw":0.454,"pos_mean_cr":0.645,"vor":-3.6,"repl_pts":144.6,"ppg":8.29,"sd":4.42,"rely":83},{"name":"Parker Washington","team":"JAC","pos":"WR","pts":141.4,"rec":62.0,"detail":"62 rec, 814 rec yd, 5 rec TD","adp":65.1,"cr":0.658,"ppg25":11.5,"star":1,"stiff":6,"proven":true,"span":"2025","cr_raw":0.667,"pos_mean_cr":0.645,"vor":-3.2,"repl_pts":144.6,"ppg":8.32,"sd":5.47,"rely":47},{"name":"Chris Godwin","team":"TB","pos":"WR","pts":140.9,"rec":68.0,"detail":"68 rec, 779 rec yd, 5 rec TD","adp":76.1,"cr":0.653,"ppg25":13.0,"proven":true,"span":"3yr","cr_raw":0.658,"pos_mean_cr":0.645,"vor":-3.7,"repl_pts":144.6,"ppg":8.29,"sd":5.41,"rely":48,"notes":["Injuries have cost him 30 games across nine seasons. Reliability measured across 2023-25 rather than last year alone."],"alt":["Chris Godwin Jr"]},{"name":"Xavier Worthy","team":"KC","pos":"WR","pts":132.2,"rec":57.0,"detail":"57 rec, 735 rec yd, 4 rec TD","adp":99.7,"cr":0.683,"ppg25":9.6,"proven":true,"span":"3yr","cr_raw":0.71,"pos_mean_cr":0.645,"vor":-12.4,"repl_pts":144.6,"ppg":7.78,"sd":5.31,"rely":39,"notes":["No usable 2025 sample; reliability measured across 2023-25."]},{"name":"Brian Thomas Jr.","team":"JAC","pos":"WR","pts":138.2,"rec":56.0,"detail":"56 rec, 812 rec yd, 5 rec TD","adp":70.1,"cr":0.62,"ppg25":9.9,"star":0,"stiff":4,"proven":true,"span":"2025","cr_raw":0.602,"pos_mean_cr":0.645,"vor":-6.4,"repl_pts":144.6,"ppg":8.13,"sd":5.04,"rely":58,"alt":["BTJ"]},{"name":"Michael Wilson","team":"ARI","pos":"WR","pts":138.2,"rec":66.0,"detail":"66 rec, 822 rec yd, 4 rec TD","adp":74.6,"cr":0.746,"ppg25":13.0,"star":2,"stiff":7,"proven":true,"span":"2025","cr_raw":0.817,"pos_mean_cr":0.645,"vor":-6.4,"repl_pts":144.6,"ppg":8.13,"sd":6.06,"rely":21},{"name":"Stefon Diggs","team":"WAS","pos":"WR","pts":136.6,"rec":62.0,"detail":"62 rec, 766 rec yd, 5 rec TD","adp":94.8,"cr":0.59,"ppg25":12.4,"star":1,"stiff":6,"proven":true,"span":"2025","cr_raw":0.551,"pos_mean_cr":0.645,"vor":-8.0,"repl_pts":144.6,"ppg":8.04,"sd":4.74,"rely":66},{"name":"Khalil Shakir","team":"BUF","pos":"WR","pts":135.6,"rec":72.0,"detail":"72 rec, 766 rec yd, 4 rec TD","adp":108.5,"cr":0.614,"ppg25":10.4,"star":0,"stiff":5,"proven":true,"span":"2025","cr_raw":0.592,"pos_mean_cr":0.645,"vor":-9.0,"repl_pts":144.6,"ppg":7.98,"sd":4.9,"rely":59},{"name":"Jordan Addison","team":"MIN","pos":"WR","pts":133.7,"rec":55.0,"detail":"55 rec, 769 rec yd, 5 rec TD","adp":86.2,"cr":0.653,"ppg25":9.7,"star":0,"stiff":3,"proven":true,"span":"2025","cr_raw":0.659,"pos_mean_cr":0.645,"vor":-10.9,"repl_pts":144.6,"ppg":7.86,"sd":5.13,"rely":48},{"name":"Wan'Dale Robinson","team":"TEN","pos":"WR","pts":135.1,"rec":77.0,"detail":"77 rec, 796 rec yd, 3 rec TD","adp":93.6,"cr":0.637,"ppg25":13.6,"star":3,"stiff":4,"proven":true,"span":"2025","cr_raw":0.631,"pos_mean_cr":0.645,"vor":-9.5,"repl_pts":144.6,"ppg":7.95,"sd":5.06,"rely":53},{"name":"Romeo Doubs","team":"NE","pos":"WR","pts":133.9,"rec":58.0,"detail":"58 rec, 759 rec yd, 5 rec TD","adp":108.1,"cr":0.69,"ppg25":10.3,"star":1,"stiff":5,"proven":true,"span":"2025","cr_raw":0.722,"pos_mean_cr":0.645,"vor":-10.7,"repl_pts":144.6,"ppg":7.88,"sd":5.44,"rely":37},{"name":"Quentin Johnston","team":"LAC","pos":"WR","pts":130.7,"rec":50.0,"detail":"50 rec, 707 rec yd, 6 rec TD","adp":87.8,"cr":0.681,"ppg25":12.2,"star":1,"stiff":4,"proven":true,"span":"2025","cr_raw":0.707,"pos_mean_cr":0.645,"vor":-13.9,"repl_pts":144.6,"ppg":7.69,"sd":5.24,"rely":40},{"name":"Josh Downs","team":"IND","pos":"WR","pts":127.7,"rec":68.0,"detail":"68 rec, 707 rec yd, 4 rec TD","adp":91.4,"cr":0.599,"ppg25":8.5,"star":0,"stiff":8,"proven":true,"span":"2025","cr_raw":0.566,"pos_mean_cr":0.645,"vor":-16.9,"repl_pts":144.6,"ppg":7.51,"sd":4.5,"rely":64},{"name":"Matthew Golden","team":"GB","pos":"WR","pts":126.2,"rec":54.0,"detail":"54 rec, 702 rec yd, 5 rec TD","adp":102.8,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-18.4,"repl_pts":144.6,"ppg":7.42,"sd":4.79,"rely":50},{"name":"KC Concepcion","team":"CLE","pos":"WR","pts":123.6,"rec":58.0,"detail":"58 rec, 752 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-21.0,"repl_pts":144.6,"ppg":7.27,"sd":4.69,"rely":50},{"name":"Makai Lemon","team":"PHI","pos":"WR","pts":118.7,"rec":56.0,"detail":"56 rec, 658 rec yd, 4 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-25.9,"repl_pts":144.6,"ppg":6.98,"sd":4.5,"rely":50,"rookie":true},{"name":"De'Zhaun Stribling","team":"SF","pos":"WR","pts":118.7,"rec":56.0,"detail":"56 rec, 677 rec yd, 4 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-25.9,"repl_pts":144.6,"ppg":6.98,"sd":4.5,"rely":50,"rookie":true},{"name":"Rashid Shaheed","team":"SEA","pos":"WR","pts":117.9,"rec":49.0,"detail":"49 rec, 659 rec yd, 4 rec TD","adp":null,"cr":0.66,"ppg25":8.7,"star":0,"stiff":6,"proven":true,"span":"2025","cr_raw":0.671,"pos_mean_cr":0.645,"vor":-26.7,"repl_pts":144.6,"ppg":6.94,"sd":4.58,"rely":46},{"name":"Jordyn Tyson","team":"NO","pos":"WR","pts":110.8,"rec":49.0,"detail":"49 rec, 633 rec yd, 4 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-33.8,"repl_pts":144.6,"ppg":6.52,"sd":4.21,"rely":50,"rookie":true,"notes":["Expected to miss roughly two months with a hamstring injury from a joint practice. Not draftable as a starter."]},{"name":"Tre Tucker","team":"LV","pos":"WR","pts":108.5,"rec":52.0,"detail":"52 rec, 655 rec yd, 3 rec TD","adp":null,"cr":0.818,"ppg25":9.5,"star":1,"stiff":8,"proven":true,"span":"2025","cr_raw":0.94,"pos_mean_cr":0.645,"vor":-36.1,"repl_pts":144.6,"ppg":6.38,"sd":5.22,"rely":0},{"name":"Jerry Jeudy","team":"CLE","pos":"WR","pts":107.0,"rec":51.0,"detail":"51 rec, 645 rec yd, 3 rec TD","adp":null,"cr":0.698,"ppg25":7.1,"star":0,"stiff":11,"proven":true,"span":"2025","cr_raw":0.735,"pos_mean_cr":0.645,"vor":-37.6,"repl_pts":144.6,"ppg":6.29,"sd":4.39,"rely":35},{"name":"Deebo Samuel","team":"SF","pos":"WR","pts":107.0,"rec":47.0,"detail":"47 rec, 537 rec yd, 3 rec TD","adp":null,"cr":0.631,"ppg25":11.8,"star":1,"stiff":6,"proven":true,"span":"2025","cr_raw":0.621,"pos_mean_cr":0.645,"vor":-37.6,"repl_pts":144.6,"ppg":6.29,"sd":3.97,"rely":54,"alt":["Deebo Samuel Sr"]},{"name":"Jalen Coker","team":"CAR","pos":"WR","pts":104.1,"rec":50.0,"detail":"50 rec, 621 rec yd, 3 rec TD","adp":null,"cr":0.706,"ppg25":8.2,"star":0,"stiff":6,"proven":true,"span":"2025","cr_raw":0.749,"pos_mean_cr":0.645,"vor":-40.5,"repl_pts":144.6,"ppg":6.12,"sd":4.32,"rely":33},{"name":"Rashod Bateman","team":"BAL","pos":"WR","pts":102.2,"rec":44.0,"detail":"44 rec, 572 rec yd, 4 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-42.4,"repl_pts":144.6,"ppg":6.01,"sd":3.88,"rely":50,"notes":[]},{"name":"Keenan Allen","team":"IND","pos":"WR","pts":101.1,"rec":55.0,"detail":"55 rec, 566 rec yd, 3 rec TD","adp":null,"cr":0.638,"ppg25":10.7,"star":1,"stiff":4,"proven":true,"span":"2025","cr_raw":0.633,"pos_mean_cr":0.645,"vor":-43.5,"repl_pts":144.6,"ppg":5.95,"sd":3.8,"rely":52},{"name":"Jalen McMillan","team":"TB","pos":"WR","pts":98.0,"rec":39.0,"detail":"39 rec, 555 rec yd, 4 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-46.6,"repl_pts":144.6,"ppg":5.76,"sd":3.72,"rely":50},{"name":"Calvin Ridley","team":"TEN","pos":"WR","pts":93.3,"rec":39.0,"detail":"39 rec, 568 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-51.3,"repl_pts":144.6,"ppg":5.49,"sd":3.54,"rely":50},{"name":"Germie Bernard","team":"PIT","pos":"WR","pts":92.7,"rec":43.0,"detail":"43 rec, 523 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-51.9,"repl_pts":144.6,"ppg":5.45,"sd":3.52,"rely":50},{"name":"Jalen Nailor","team":"LV","pos":"WR","pts":90.7,"rec":44.0,"detail":"44 rec, 577 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-53.9,"repl_pts":144.6,"ppg":5.34,"sd":3.44,"rely":50},{"name":"Adonai Mitchell","team":"NYJ","pos":"WR","pts":89.2,"rec":36.0,"detail":"36 rec, 482 rec yd, 4 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-55.4,"repl_pts":144.6,"ppg":5.25,"sd":3.39,"rely":50},{"name":"Malik Washington","team":"MIA","pos":"WR","pts":88.6,"rec":43.0,"detail":"43 rec, 455 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-56.0,"repl_pts":144.6,"ppg":5.21,"sd":3.36,"rely":50},{"name":"Caleb Douglas","team":"MIA","pos":"WR","pts":83.7,"rec":42.0,"detail":"42 rec, 517 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-60.9,"repl_pts":144.6,"ppg":4.92,"sd":3.17,"rely":50},{"name":"Denzel Boston","team":"CLE","pos":"WR","pts":83.6,"rec":40.0,"detail":"40 rec, 526 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-61.0,"repl_pts":144.6,"ppg":4.92,"sd":3.17,"rely":50},{"name":"Xavier Hutchinson","team":"HOU","pos":"WR","pts":83.1,"rec":38.0,"detail":"38 rec, 471 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-61.5,"repl_pts":144.6,"ppg":4.89,"sd":3.15,"rely":50},{"name":"Ryan Flournoy","team":"DAL","pos":"WR","pts":82.7,"rec":36.0,"detail":"36 rec, 417 rec yd, 4 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-61.9,"repl_pts":144.6,"ppg":4.86,"sd":3.13,"rely":50},{"name":"Jauan Jennings","team":"MIN","pos":"WR","pts":82.1,"rec":37.0,"detail":"37 rec, 466 rec yd, 3 rec TD","adp":null,"cr":0.6,"ppg25":11.6,"star":0,"stiff":4,"proven":true,"span":"2025","cr_raw":0.569,"pos_mean_cr":0.645,"vor":-62.5,"repl_pts":144.6,"ppg":4.83,"sd":2.9,"rely":63},{"name":"Devaughn Vele","team":"NO","pos":"WR","pts":80.4,"rec":38.0,"detail":"38 rec, 444 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-64.2,"repl_pts":144.6,"ppg":4.73,"sd":3.05,"rely":50},{"name":"Cooper Kupp","team":"SEA","pos":"WR","pts":79.5,"rec":36.0,"detail":"36 rec, 445 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-65.1,"repl_pts":144.6,"ppg":4.68,"sd":3.02,"rely":50},{"name":"Xavier Legette","team":"CAR","pos":"WR","pts":78.7,"rec":38.0,"detail":"38 rec, 427 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-65.9,"repl_pts":144.6,"ppg":4.63,"sd":2.99,"rely":50},{"name":"Isaac TeSlaa","team":"DET","pos":"WR","pts":76.5,"rec":30.0,"detail":"30 rec, 385 rec yd, 4 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-68.1,"repl_pts":144.6,"ppg":4.5,"sd":2.9,"rely":50},{"name":"Darius Slayton","team":"NYG","pos":"WR","pts":75.1,"rec":31.0,"detail":"31 rec, 426 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-69.5,"repl_pts":144.6,"ppg":4.42,"sd":2.85,"rely":50},{"name":"Jaylin Noel","team":"HOU","pos":"WR","pts":73.5,"rec":34.0,"detail":"34 rec, 395 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-71.1,"repl_pts":144.6,"ppg":4.32,"sd":2.79,"rely":50},{"name":"Ja'Kobi Lane","team":"BAL","pos":"WR","pts":69.4,"rec":30.0,"detail":"30 rec, 374 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-75.2,"repl_pts":144.6,"ppg":4.08,"sd":2.63,"rely":50},{"name":"Antonio Williams","team":"WAS","pos":"WR","pts":69.3,"rec":27.0,"detail":"27 rec, 388 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-75.3,"repl_pts":144.6,"ppg":4.08,"sd":2.63,"rely":50},{"name":"Tre Harris","team":"LAC","pos":"WR","pts":68.5,"rec":32.0,"detail":"32 rec, 415 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-76.1,"repl_pts":144.6,"ppg":4.03,"sd":2.6,"rely":50,"alt":["Tre' Harris"]},{"name":"KaVontae Turpin","team":"DAL","pos":"WR","pts":67.3,"rec":23.0,"detail":"23 rec, 355 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-77.3,"repl_pts":144.6,"ppg":3.96,"sd":2.55,"rely":50},{"name":"Travis Hunter","team":"JAC","pos":"WR","pts":67.1,"rec":34.0,"detail":"34 rec, 391 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-77.5,"repl_pts":144.6,"ppg":3.95,"sd":2.55,"rely":50},{"name":"Jack Bech","team":"LV","pos":"WR","pts":66.6,"rec":34.0,"detail":"34 rec, 386 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-78.0,"repl_pts":144.6,"ppg":3.92,"sd":2.53,"rely":50},{"name":"Jalen Tolbert","team":"MIA","pos":"WR","pts":66.6,"rec":34.0,"detail":"34 rec, 446 rec yd, 1 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-78.0,"repl_pts":144.6,"ppg":3.92,"sd":2.53,"rely":50},{"name":"Omar Cooper Jr.","team":"NYJ","pos":"WR","pts":66.5,"rec":28.0,"detail":"28 rec, 355 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-78.1,"repl_pts":144.6,"ppg":3.91,"sd":2.52,"rely":50},{"name":"Pat Bryant","team":"DEN","pos":"WR","pts":65.1,"rec":31.0,"detail":"31 rec, 386 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-79.5,"repl_pts":144.6,"ppg":3.83,"sd":2.47,"rely":50},{"name":"Dyami Brown","team":"WAS","pos":"WR","pts":63.2,"rec":29.0,"detail":"29 rec, 377 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-81.4,"repl_pts":144.6,"ppg":3.72,"sd":2.4,"rely":50},{"name":"Olamide Zaccheaus","team":"ATL","pos":"WR","pts":63.2,"rec":29.0,"detail":"29 rec, 377 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-81.4,"repl_pts":144.6,"ppg":3.72,"sd":2.4,"rely":50},{"name":"Tyquan Thornton","team":"KC","pos":"WR","pts":63.0,"rec":21.0,"detail":"21 rec, 355 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-81.6,"repl_pts":144.6,"ppg":3.71,"sd":2.39,"rely":50},{"name":"Dontayvion Wicks","team":"PHI","pos":"WR","pts":61.6,"rec":28.0,"detail":"28 rec, 366 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-83.0,"repl_pts":144.6,"ppg":3.62,"sd":2.33,"rely":50},{"name":"Andrei Iosivas","team":"CIN","pos":"WR","pts":59.6,"rec":27.0,"detail":"27 rec, 351 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-85.0,"repl_pts":144.6,"ppg":3.51,"sd":2.26,"rely":50},{"name":"Tank Dell","team":"HOU","pos":"WR","pts":59.2,"rec":29.0,"detail":"29 rec, 337 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-85.4,"repl_pts":144.6,"ppg":3.48,"sd":2.24,"rely":50,"notes":["In line for more work after Jayden Higgins tore an ACL, though Houston also traded for Kayshon Boutte to fill that role."]},{"name":"Kayshon Boutte","team":"HOU","pos":"WR","pts":58.0,"rec":21.0,"detail":"21 rec, 305 rec yd, 3 rec TD","adp":null,"cr":0.763,"ppg25":8.9,"star":1,"stiff":9,"proven":true,"span":"2025","cr_raw":0.846,"pos_mean_cr":0.645,"vor":-86.6,"repl_pts":144.6,"ppg":3.41,"sd":2.6,"rely":16,"notes":["Traded from New England to Houston on 25 August 2026, filling the hole left by Jayden Higgins' season-ending ACL tear. The projection here was set before the move and likely understates his new role."]},{"name":"Darnell Mooney","team":"NYG","pos":"WR","pts":55.7,"rec":24.0,"detail":"24 rec, 327 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-88.9,"repl_pts":144.6,"ppg":3.28,"sd":2.12,"rely":50},{"name":"Troy Franklin","team":"DEN","pos":"WR","pts":55.3,"rec":27.0,"detail":"27 rec, 308 rec yd, 2 rec TD","adp":null,"cr":0.696,"ppg25":10.4,"star":1,"stiff":6,"proven":true,"span":"2025","cr_raw":0.732,"pos_mean_cr":0.645,"vor":-89.3,"repl_pts":144.6,"ppg":3.25,"sd":2.26,"rely":35},{"name":"Tutu Atwell","team":"MIA","pos":"WR","pts":54.1,"rec":23.0,"detail":"23 rec, 316 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-90.5,"repl_pts":144.6,"ppg":3.18,"sd":2.05,"rely":50},{"name":"Kendrick Bourne","team":"ARI","pos":"WR","pts":53.2,"rec":23.0,"detail":"23 rec, 307 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-91.4,"repl_pts":144.6,"ppg":3.13,"sd":2.02,"rely":50},{"name":"Keon Coleman","team":"BUF","pos":"WR","pts":52.2,"rec":21.0,"detail":"21 rec, 307 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-92.4,"repl_pts":144.6,"ppg":3.07,"sd":1.98,"rely":50},{"name":"Cyrus Allen","team":"KC","pos":"WR","pts":50.1,"rec":23.0,"detail":"23 rec, 276 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.645,"cr_raw":null,"pos_mean_cr":0.645,"vor":-94.5,"repl_pts":144.6,"ppg":2.95,"sd":1.9,"rely":50},{"name":"Brock Bowers","team":"LV","pos":"TE","pts":201.5,"rec":103.0,"detail":"103 rec, 1088 rec yd, 7 rec TD","adp":44.0,"cr":0.709,"ppg25":14.7,"star":3,"stiff":1,"proven":true,"span":"2025","cr_raw":0.74,"pos_mean_cr":0.664,"vor":82.4,"repl_pts":119.1,"ppg":11.85,"sd":8.4,"rely":32,"notes":["Big projection, but 2025 volatility was high for the position. The points are real; the week-to-week ride is not smooth."]},{"name":"Trey McBride","team":"ARI","pos":"TE","pts":198.1,"rec":104.0,"detail":"104 rec, 1049 rec yd, 7 rec TD","adp":37.8,"cr":0.539,"ppg25":18.6,"star":8,"stiff":1,"proven":true,"span":"2025","cr_raw":0.45,"pos_mean_cr":0.664,"vor":79.0,"repl_pts":119.1,"ppg":11.65,"sd":6.28,"rely":98,"notes":["8 boom weeks against 1 bust in 2025 - elite production paired with genuinely elite reliability."]},{"name":"Colston Loveland","team":"CHI","pos":"TE","pts":156.5,"rec":73.0,"detail":"73 rec, 848 rec yd, 6 rec TD","adp":62.1,"cr":0.764,"ppg25":10.3,"star":3,"stiff":7,"proven":true,"span":"2025","cr_raw":0.834,"pos_mean_cr":0.664,"vor":37.4,"repl_pts":119.1,"ppg":9.21,"sd":7.04,"rely":10},{"name":"Tyler Warren","team":"IND","pos":"TE","pts":151.8,"rec":78.0,"detail":"78 rec, 836 rec yd, 5 rec TD","adp":72.8,"cr":0.533,"ppg25":11.1,"star":1,"stiff":5,"proven":true,"span":"2025","cr_raw":0.44,"pos_mean_cr":0.664,"vor":32.7,"repl_pts":119.1,"ppg":8.93,"sd":4.76,"rely":100},{"name":"Harold Fannin Jr.","team":"CLE","pos":"TE","pts":147.8,"rec":77.0,"detail":"77 rec, 801 rec yd, 5 rec TD","adp":82.5,"cr":0.588,"ppg25":11.7,"star":2,"stiff":4,"proven":true,"span":"2025","cr_raw":0.534,"pos_mean_cr":0.664,"vor":28.7,"repl_pts":119.1,"ppg":8.69,"sd":5.11,"rely":79},{"name":"Kyle Pitts","team":"ATL","pos":"TE","pts":146.8,"rec":76.0,"detail":"76 rec, 856 rec yd, 4 rec TD","adp":82.9,"cr":0.745,"ppg25":12.4,"star":1,"stiff":6,"proven":true,"span":"2025","cr_raw":0.802,"pos_mean_cr":0.664,"vor":27.7,"repl_pts":119.1,"ppg":8.64,"sd":6.44,"rely":18,"alt":["Kyle Pitts Sr"]},{"name":"Travis Kelce","team":"KC","pos":"TE","pts":136.8,"rec":73.0,"detail":"73 rec, 771 rec yd, 4 rec TD","adp":117.1,"cr":0.605,"ppg25":11.4,"star":1,"stiff":5,"proven":true,"span":"2025","cr_raw":0.564,"pos_mean_cr":0.664,"vor":17.7,"repl_pts":119.1,"ppg":8.05,"sd":4.87,"rely":72},{"name":"Sam LaPorta","team":"DET","pos":"TE","pts":134.2,"rec":61.0,"detail":"61 rec, 745 rec yd, 5 rec TD","adp":126.7,"cr":0.651,"ppg25":11.9,"star":0,"stiff":4,"proven":true,"span":"2025","cr_raw":0.642,"pos_mean_cr":0.664,"vor":15.1,"repl_pts":119.1,"ppg":7.89,"sd":5.14,"rely":54},{"name":"Mark Andrews","team":"BAL","pos":"TE","pts":130.2,"rec":61.0,"detail":"61 rec, 645 rec yd, 6 rec TD","adp":123.8,"cr":0.791,"ppg25":7.7,"star":1,"stiff":11,"proven":true,"span":"2025","cr_raw":0.881,"pos_mean_cr":0.664,"vor":11.1,"repl_pts":119.1,"ppg":7.66,"sd":6.06,"rely":0,"notes":["2025 was 1 boom week against 11 bust weeks - the worst reliability line among startable tight ends."]},{"name":"Tucker Kraft","team":"GB","pos":"TE","pts":130.1,"rec":57.0,"detail":"57 rec, 724 rec yd, 5 rec TD","adp":94.7,"cr":0.674,"ppg25":14.7,"star":2,"stiff":2,"proven":true,"span":"2025","cr_raw":0.681,"pos_mean_cr":0.664,"vor":11.0,"repl_pts":119.1,"ppg":7.65,"sd":5.16,"rely":45,"notes":["Coming back from a torn ACL suffered mid-2025. Off the PUP list in late July and building up workload; has a shot at Week 1 but the ramp is real."]},{"name":"Dallas Goedert","team":"PHI","pos":"TE","pts":126.7,"rec":58.0,"detail":"58 rec, 625 rec yd, 6 rec TD","adp":100.9,"cr":0.648,"ppg25":12.3,"star":2,"stiff":4,"proven":true,"span":"2025","cr_raw":0.637,"pos_mean_cr":0.664,"vor":7.6,"repl_pts":119.1,"ppg":7.45,"sd":4.83,"rely":55},{"name":"Jake Ferguson","team":"DAL","pos":"TE","pts":123.2,"rec":71.0,"detail":"71 rec, 585 rec yd, 5 rec TD","adp":144.7,"cr":0.651,"ppg25":11.1,"star":1,"stiff":7,"proven":true,"span":"2025","cr_raw":0.641,"pos_mean_cr":0.664,"vor":4.1,"repl_pts":119.1,"ppg":7.25,"sd":4.72,"rely":54},{"name":"George Kittle","team":"SF","pos":"TE","pts":123.2,"rec":57.0,"detail":"57 rec, 655 rec yd, 5 rec TD","adp":116.2,"cr":0.664,"ppg25":14.7,"star":3,"stiff":2,"proven":true,"span":"2025","cr_raw":0.664,"pos_mean_cr":0.664,"vor":4.1,"repl_pts":119.1,"ppg":7.25,"sd":4.81,"rely":49},{"name":"Dalton Kincaid","team":"BUF","pos":"TE","pts":119.7,"rec":52.0,"detail":"52 rec, 645 rec yd, 5 rec TD","adp":152.5,"cr":0.685,"ppg25":10.5,"star":0,"stiff":4,"proven":true,"span":"2025","cr_raw":0.699,"pos_mean_cr":0.664,"vor":0.6,"repl_pts":119.1,"ppg":7.04,"sd":4.82,"rely":41},{"name":"Hunter Henry","team":"NE","pos":"TE","pts":119.1,"rec":55.0,"detail":"55 rec, 624 rec yd, 5 rec TD","adp":162.7,"cr":0.68,"ppg25":10.5,"star":2,"stiff":6,"proven":true,"span":"2025","cr_raw":0.692,"pos_mean_cr":0.664,"vor":0.0,"repl_pts":119.1,"ppg":7.01,"sd":4.77,"rely":43},{"name":"Isaiah Likely","team":"NYG","pos":"TE","pts":116.8,"rec":56.0,"detail":"56 rec, 656 rec yd, 4 rec TD","adp":134.1,"proven":false,"cr":0.664,"cr_raw":null,"pos_mean_cr":0.664,"vor":-2.3,"repl_pts":119.1,"ppg":6.87,"sd":4.56,"rely":49,"notes":["No qualifying sample. Reliability shown is a positional average."]},{"name":"Dalton Schultz","team":"HOU","pos":"TE","pts":115.3,"rec":67.0,"detail":"67 rec, 646 rec yd, 3 rec TD","adp":178.0,"cr":0.591,"ppg25":10.5,"star":0,"stiff":7,"proven":true,"span":"2025","cr_raw":0.539,"pos_mean_cr":0.664,"vor":-3.8,"repl_pts":119.1,"ppg":6.78,"sd":4.01,"rely":78},{"name":"Juwan Johnson","team":"NO","pos":"TE","pts":114.8,"rec":60.0,"detail":"60 rec, 676 rec yd, 3 rec TD","adp":161.5,"cr":0.542,"ppg25":10.6,"star":1,"stiff":5,"proven":true,"span":"2025","cr_raw":0.456,"pos_mean_cr":0.664,"vor":-4.3,"repl_pts":119.1,"ppg":6.75,"sd":3.66,"rely":97},{"name":"Pat Freiermuth","team":"PIT","pos":"TE","pts":112.3,"rec":53.0,"detail":"53 rec, 566 rec yd, 5 rec TD","adp":null,"proven":false,"cr":0.664,"cr_raw":null,"pos_mean_cr":0.664,"vor":-6.8,"repl_pts":119.1,"ppg":6.61,"sd":4.39,"rely":49,"notes":[]},{"name":"Greg Dulcich","team":"MIA","pos":"TE","pts":110.8,"rec":54.0,"detail":"54 rec, 606 rec yd, 4 rec TD","adp":null,"proven":false,"cr":0.664,"cr_raw":null,"pos_mean_cr":0.664,"vor":-8.3,"repl_pts":119.1,"ppg":6.52,"sd":4.33,"rely":49},{"name":"Brenton Strange","team":"JAC","pos":"TE","pts":105.8,"rec":51.0,"detail":"51 rec, 571 rec yd, 4 rec TD","adp":171.6,"cr":0.636,"ppg25":9.8,"star":0,"stiff":4,"proven":true,"span":"2025","cr_raw":0.617,"pos_mean_cr":0.664,"vor":-13.3,"repl_pts":119.1,"ppg":6.22,"sd":3.96,"rely":60},{"name":"T.J. Hockenson","team":"MIN","pos":"TE","pts":103.5,"rec":59.0,"detail":"59 rec, 568 rec yd, 3 rec TD","adp":173.3,"proven":false,"cr":0.664,"cr_raw":null,"pos_mean_cr":0.664,"vor":-15.6,"repl_pts":119.1,"ppg":6.09,"sd":4.04,"rely":49,"notes":["A veteran outside ESPN's consistency table rather than an unknown. No fantasy-relevant 2025 workload to measure."]},{"name":"AJ Barner","team":"SEA","pos":"TE","pts":100.6,"rec":54.0,"detail":"54 rec, 504 rec yd, 4 rec TD","adp":null,"cr":0.714,"ppg25":8.7,"star":1,"stiff":9,"proven":true,"span":"2025","cr_raw":0.749,"pos_mean_cr":0.664,"vor":-18.5,"repl_pts":119.1,"ppg":5.92,"sd":4.23,"rely":30},{"name":"Terrance Ferguson","team":"LAR","pos":"TE","pts":96.2,"rec":40.0,"detail":"40 rec, 470 rec yd, 5 rec TD","adp":null,"proven":false,"cr":0.664,"cr_raw":null,"pos_mean_cr":0.664,"vor":-22.9,"repl_pts":119.1,"ppg":5.66,"sd":3.76,"rely":49},{"name":"Cade Otton","team":"TB","pos":"TE","pts":96.2,"rec":53.0,"detail":"53 rec, 525 rec yd, 3 rec TD","adp":null,"cr":0.751,"ppg25":7.6,"star":1,"stiff":10,"proven":true,"span":"2025","cr_raw":0.813,"pos_mean_cr":0.664,"vor":-22.9,"repl_pts":119.1,"ppg":5.66,"sd":4.25,"rely":16},{"name":"Chigoziem Okonkwo","team":"WAS","pos":"TE","pts":96.1,"rec":54.0,"detail":"54 rec, 519 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.664,"cr_raw":null,"pos_mean_cr":0.664,"vor":-23.0,"repl_pts":119.1,"ppg":5.65,"sd":3.75,"rely":49},{"name":"Evan Engram","team":"DEN","pos":"TE","pts":94.1,"rec":57.0,"detail":"57 rec, 484 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.664,"cr_raw":null,"pos_mean_cr":0.664,"vor":-25.0,"repl_pts":119.1,"ppg":5.54,"sd":3.68,"rely":49},{"name":"Mike Gesicki","team":"CIN","pos":"TE","pts":89.7,"rec":43.0,"detail":"43 rec, 450 rec yd, 4 rec TD","adp":null,"proven":false,"cr":0.664,"cr_raw":null,"pos_mean_cr":0.664,"vor":-29.4,"repl_pts":119.1,"ppg":5.28,"sd":3.51,"rely":49},{"name":"Gunnar Helm","team":"TEN","pos":"TE","pts":85.2,"rec":45.0,"detail":"45 rec, 455 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.664,"cr_raw":null,"pos_mean_cr":0.664,"vor":-33.9,"repl_pts":119.1,"ppg":5.01,"sd":3.33,"rely":49},{"name":"Mason Taylor","team":"NYJ","pos":"TE","pts":84.3,"rec":50.0,"detail":"50 rec, 481 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.664,"cr_raw":null,"pos_mean_cr":0.664,"vor":-34.8,"repl_pts":119.1,"ppg":4.96,"sd":3.29,"rely":49},{"name":"Michael Mayer","team":"LV","pos":"TE","pts":80.7,"rec":43.0,"detail":"43 rec, 420 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.664,"cr_raw":null,"pos_mean_cr":0.664,"vor":-38.4,"repl_pts":119.1,"ppg":4.75,"sd":3.15,"rely":49},{"name":"David Njoku","team":"LAC","pos":"TE","pts":76.6,"rec":45.0,"detail":"45 rec, 369 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.664,"cr_raw":null,"pos_mean_cr":0.664,"vor":-42.5,"repl_pts":119.1,"ppg":4.51,"sd":2.99,"rely":49},{"name":"Kenyon Sadiq","team":"NYJ","pos":"TE","pts":76.2,"rec":39.0,"detail":"39 rec, 455 rec yd, 2 rec TD","adp":null,"proven":false,"cr":0.664,"cr_raw":null,"pos_mean_cr":0.664,"vor":-42.9,"repl_pts":119.1,"ppg":4.48,"sd":2.97,"rely":49,"notes":["Setback in early August following offseason hernia surgery. Missed development time points to a slow start."]},{"name":"Oronde Gadsden","team":"LAC","pos":"TE","pts":75.6,"rec":34.0,"detail":"34 rec, 414 rec yd, 3 rec TD","adp":null,"cr":0.785,"ppg25":8.8,"star":1,"stiff":8,"proven":true,"span":"2025","cr_raw":0.871,"pos_mean_cr":0.664,"vor":-43.5,"repl_pts":119.1,"ppg":4.45,"sd":3.49,"rely":2},{"name":"Cole Kmet","team":"CHI","pos":"TE","pts":72.1,"rec":35.0,"detail":"35 rec, 374 rec yd, 3 rec TD","adp":null,"proven":false,"cr":0.664,"cr_raw":null,"pos_mean_cr":0.664,"vor":-47.0,"repl_pts":119.1,"ppg":4.24,"sd":2.82,"rely":49},{"name":"Brandon Aubrey","team":"DAL","pos":"K","pts":150.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":8.82,"sd":4.85,"rely":50},{"name":"Cameron Dicker","team":"LAC","pos":"K","pts":146.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":8.59,"sd":4.72,"rely":50},{"name":"Ka'imi Fairbairn","team":"HOU","pos":"K","pts":138.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":8.12,"sd":4.47,"rely":50},{"name":"Jason Myers","team":"SEA","pos":"K","pts":138.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":8.12,"sd":4.47,"rely":50},{"name":"Wil Lutz","team":"DEN","pos":"K","pts":133.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.82,"sd":4.3,"rely":50},{"name":"Chase McLaughlin","team":"TB","pos":"K","pts":131.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.71,"sd":4.24,"rely":50},{"name":"Harrison Butker","team":"KC","pos":"K","pts":130.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.65,"sd":4.21,"rely":50},{"name":"Eddy Pineiro","team":"SF","pos":"K","pts":130.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.65,"sd":4.21,"rely":50,"alt":["Eddy Pineiro","Eddy Pinheiro"]},{"name":"Tyler Bass","team":"BUF","pos":"K","pts":126.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.41,"sd":4.08,"rely":50},{"name":"Tyler Loop","team":"BAL","pos":"K","pts":125.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.35,"sd":4.04,"rely":50},{"name":"Jake Bates","team":"DET","pos":"K","pts":125.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.35,"sd":4.04,"rely":50},{"name":"Cam Little","team":"JAC","pos":"K","pts":125.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.35,"sd":4.04,"rely":50},{"name":"Will Reichard","team":"MIN","pos":"K","pts":125.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.35,"sd":4.04,"rely":50},{"name":"Andres Borregales","team":"NE","pos":"K","pts":124.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.29,"sd":4.01,"rely":50,"alt":["Andy Borregales"]},{"name":"Cairo Santos","team":"CHI","pos":"K","pts":124.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.29,"sd":4.01,"rely":50},{"name":"Trey Smack","team":"GB","pos":"K","pts":124.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.29,"sd":4.01,"rely":50},{"name":"Blake Grupe","team":"IND","pos":"K","pts":123.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.24,"sd":3.98,"rely":50},{"name":"Evan McPherson","team":"CIN","pos":"K","pts":121.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.12,"sd":3.92,"rely":50},{"name":"Chris Boswell","team":"PIT","pos":"K","pts":120.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.06,"sd":3.88,"rely":50},{"name":"Harrison Mevis","team":"LAR","pos":"K","pts":120.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.06,"sd":3.88,"rely":50},{"name":"Charlie Smyth","team":"NO","pos":"K","pts":120.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.06,"sd":3.88,"rely":50},{"name":"Jake Elliott","team":"PHI","pos":"K","pts":120.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.06,"sd":3.88,"rely":50},{"name":"Ben Sauls","team":"NYG","pos":"K","pts":119.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":7.0,"sd":3.85,"rely":50},{"name":"Chad Ryland","team":"ARI","pos":"K","pts":112.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":6.59,"sd":3.62,"rely":50},{"name":"Drew Stevens","team":"WAS","pos":"K","pts":112.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":6.59,"sd":3.62,"rely":50},{"name":"Riley Patterson","team":"MIA","pos":"K","pts":111.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":6.53,"sd":3.59,"rely":50},{"name":"Ryan Fitzgerald","team":"CAR","pos":"K","pts":110.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":6.47,"sd":3.56,"rely":50},{"name":"Nick Folk","team":"ATL","pos":"K","pts":109.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":6.41,"sd":3.53,"rely":50},{"name":"Matt Gay","team":"LV","pos":"K","pts":109.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":6.41,"sd":3.53,"rely":50},{"name":"Joey Slye","team":"TEN","pos":"K","pts":106.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":6.24,"sd":3.43,"rely":50},{"name":"Cade York","team":"NYJ","pos":"K","pts":102.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":6.0,"sd":3.3,"rely":50},{"name":"Andre Szmyt","team":"CLE","pos":"K","pts":101.0,"detail":"Kickers are close to random year over year. Take one with your last pick.","adp":null,"proven":false,"cr":0.55,"cr_raw":null,"estimated":true,"ppg":5.94,"sd":3.27,"rely":50},{"name":"Houston D/ST","team":"HOU","pos":"DEF","pts":126.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":7.41,"sd":5.93,"rely":50},{"name":"Denver D/ST","team":"DEN","pos":"DEF","pts":121.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":7.12,"sd":5.7,"rely":50},{"name":"Pittsburgh D/ST","team":"PIT","pos":"DEF","pts":118.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":6.94,"sd":5.55,"rely":50},{"name":"Minnesota D/ST","team":"MIN","pos":"DEF","pts":116.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":6.82,"sd":5.46,"rely":50},{"name":"Seattle D/ST","team":"SEA","pos":"DEF","pts":112.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":6.59,"sd":5.27,"rely":50},{"name":"LA Chargers D/ST","team":"LAC","pos":"DEF","pts":111.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":6.53,"sd":5.22,"rely":50},{"name":"Buffalo D/ST","team":"BUF","pos":"DEF","pts":110.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":6.47,"sd":5.18,"rely":50},{"name":"Jacksonville D/ST","team":"JAC","pos":"DEF","pts":107.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":6.29,"sd":5.03,"rely":50},{"name":"LA Rams D/ST","team":"LAR","pos":"DEF","pts":106.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":6.24,"sd":4.99,"rely":50},{"name":"Philadelphia D/ST","team":"PHI","pos":"DEF","pts":104.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":6.12,"sd":4.9,"rely":50},{"name":"Detroit D/ST","team":"DET","pos":"DEF","pts":103.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":6.06,"sd":4.85,"rely":50},{"name":"New England D/ST","team":"NE","pos":"DEF","pts":99.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":5.82,"sd":4.66,"rely":50},{"name":"Baltimore D/ST","team":"BAL","pos":"DEF","pts":99.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":5.82,"sd":4.66,"rely":50},{"name":"Cincinnati D/ST","team":"CIN","pos":"DEF","pts":98.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":5.76,"sd":4.61,"rely":50},{"name":"Cleveland D/ST","team":"CLE","pos":"DEF","pts":97.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":5.71,"sd":4.57,"rely":50},{"name":"Green Bay D/ST","team":"GB","pos":"DEF","pts":95.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":5.59,"sd":4.47,"rely":50},{"name":"New Orleans D/ST","team":"NO","pos":"DEF","pts":94.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":5.53,"sd":4.42,"rely":50},{"name":"Chicago D/ST","team":"CHI","pos":"DEF","pts":94.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":5.53,"sd":4.42,"rely":50},{"name":"Tampa Bay D/ST","team":"TB","pos":"DEF","pts":93.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":5.47,"sd":4.38,"rely":50},{"name":"Indianapolis D/ST","team":"IND","pos":"DEF","pts":92.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":5.41,"sd":4.33,"rely":50},{"name":"NY Giants D/ST","team":"NYG","pos":"DEF","pts":91.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":5.35,"sd":4.28,"rely":50},{"name":"Dallas D/ST","team":"DAL","pos":"DEF","pts":91.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":5.35,"sd":4.28,"rely":50},{"name":"Atlanta D/ST","team":"ATL","pos":"DEF","pts":90.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":5.29,"sd":4.23,"rely":50},{"name":"Washington D/ST","team":"WAS","pos":"DEF","pts":86.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":5.06,"sd":4.05,"rely":50},{"name":"Tennessee D/ST","team":"TEN","pos":"DEF","pts":84.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":4.94,"sd":3.95,"rely":50},{"name":"Kansas City D/ST","team":"KC","pos":"DEF","pts":83.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":4.88,"sd":3.9,"rely":50},{"name":"Arizona D/ST","team":"ARI","pos":"DEF","pts":82.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":4.82,"sd":3.86,"rely":50},{"name":"San Francisco D/ST","team":"SF","pos":"DEF","pts":79.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":4.65,"sd":3.72,"rely":50},{"name":"Carolina D/ST","team":"CAR","pos":"DEF","pts":77.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":4.53,"sd":3.62,"rely":50},{"name":"NY Jets D/ST","team":"NYJ","pos":"DEF","pts":75.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":4.41,"sd":3.53,"rely":50},{"name":"Las Vegas D/ST","team":"LV","pos":"DEF","pts":75.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":4.41,"sd":3.53,"rely":50},{"name":"Miami D/ST","team":"MIA","pos":"DEF","pts":71.0,"detail":"Streaming a defense off waivers costs nothing. Never spend an early pick here.","adp":null,"proven":false,"cr":0.8,"cr_raw":null,"estimated":true,"ppg":4.18,"sd":3.34,"rely":50}]};
+const P = DATA.players, GAMES = DATA.meta.games;
+let TEAMS = DATA.meta.teams;
+const STARTERS = {QB:1,RB:2,WR:2,TE:1,K:1,DEF:1};
+// Flex slots break down roughly 55% WR / 40% RB / 5% TE in half-PPR.
+const FLEX_SPLIT = {WR:0.55, RB:0.40, TE:0.05};
+// The last startable player at a position IS the replacement level, so league
+// size changes every value on the board. 16 teams makes scarcity meaningfully worse.
+function replRank(pos, teams){
+  return Math.round(STARTERS[pos]*teams + (FLEX_SPLIT[pos]||0)*teams);
+}
+let REPL = {};
+const setTeams = n => { TEAMS = n;
+  ["QB","RB","WR","TE","K","DEF"].forEach(p=>REPL[p]=replRank(p,n)); };
+const ROUNDS = DATA.meta.rounds;
+const SLOTS = [["QB",1],["RB",2],["WR",2],["TE",1],["FLEX",1],["K",1],["DEF",1]];
+const FLEX_OK = {RB:1,WR:1,TE:1};
+const LATE = {K:1,DEF:1};
+// Kicker and D/ST scoring barely repeats year to year, so their apparent value
+// over replacement is mostly noise. Discounted to what actually carries over.
+const REPEAT = {K:0.15, DEF:0.25};
+// 50,400 simulated seasons put the best playoff odds at a light tilt toward
+// steady, not a heavy one. Nine players already diversify most swing away.
+const BEST_DIAL = 25;
+const TEAM_NAME = {
+  ARI:"Arizona Cardinals", ATL:"Atlanta Falcons", BAL:"Baltimore Ravens",
+  BUF:"Buffalo Bills", CAR:"Carolina Panthers", CHI:"Chicago Bears",
+  CIN:"Cincinnati Bengals", CLE:"Cleveland Browns", DAL:"Dallas Cowboys",
+  DEN:"Denver Broncos", DET:"Detroit Lions", GB:"Green Bay Packers",
+  HOU:"Houston Texans", IND:"Indianapolis Colts", JAC:"Jacksonville Jaguars",
+  JAX:"Jacksonville Jaguars", KC:"Kansas City Chiefs", LAC:"Los Angeles Chargers",
+  LAR:"Los Angeles Rams", LV:"Las Vegas Raiders", MIA:"Miami Dolphins",
+  MIN:"Minnesota Vikings", NE:"New England Patriots", NO:"New Orleans Saints",
+  NYG:"New York Giants", NYJ:"New York Jets", PHI:"Philadelphia Eagles",
+  PIT:"Pittsburgh Steelers", SEA:"Seattle Seahawks", SF:"San Francisco 49ers",
+  TB:"Tampa Bay Buccaneers", TEN:"Tennessee Titans", WAS:"Washington Commanders"
+};
+const teamName = t => TEAM_NAME[t] || t;
+// Commentators and coworkers use nicknames and different name forms than the
+// roster does, so every player carries the spellings people actually say.
+const _stxt = new Map();
+function searchText(p){
+  let v = _stxt.get(p);
+  if(v === undefined){
+    v = normq([p.name, p.team, teamName(p.team)].concat(p.alt||[]).join(" "));
+    _stxt.set(p, v);
+  }
+  return v;
+}
+const normq = s => String(s).toLowerCase()
+  .normalize("NFD").replace(/[\u0300-\u036f]/g,"")   // Piñeiro -> Pineiro
+  .replace(/[.'’]/g,"").replace(/-/g," ").replace(/\s+/g," ").trim();
+const KEY = "ff-board-v2";
+
+/* picks is a single ordered log — order is what lets us reconstruct who drafted what */
+let S = {dial:BEST_DIAL, pos:"ALL", q:"", hideGone:true, view:"list",
+         dtype:"snake", teams:14, slot:null, auto:true, picks:[], open:null};
+try{
+  const raw = localStorage.getItem(KEY);
+  if(raw) Object.assign(S, JSON.parse(raw), {open:null});
+  else {
+    const old = JSON.parse(localStorage.getItem("ff-board-v1")||"null");
+    if(old){ // carry over an in-progress draft from the earlier version
+      S.picks = (old.gone||[]).map(k=>({k,mine:false}))
+        .concat((old.mine||[]).map(k=>({k,mine:true})));
+      S.dial = old.dial ?? BEST_DIAL;
+    }
+  }
+}catch(e){}
+const save = () => { syncURL(); try{ localStorage.setItem(KEY, JSON.stringify(
+  {dial:S.dial,pos:S.pos,hideGone:S.hideGone,view:S.view,dtype:S.dtype,teams:S.teams,auto:S.auto,slot:S.slot,picks:S.picks})); }catch(e){} };
+
+const id = p => p.name+"|"+p.pos;
+const byId = {}; P.forEach(p => byId[id(p)] = p);
+const goneSet = () => new Set(S.picks.map(x=>x.k));
+const mineKeys = () => S.picks.filter(x=>x.mine).map(x=>x.k);
+let GONE = goneSet();
+let TOPMATCH = null;
+const isGone = p => GONE.has(id(p));
+const isMine = p => S.picks.some(x=>x.mine && x.k===id(p));
+
+/* ---------- snake draft geometry ---------- */
+// Pick n (0-based) belongs to this seat. Odd rounds run backwards.
+function seatOf(n){
+  const r = Math.floor(n/TEAMS), i = n % TEAMS;
+  // Snake reverses every other round; linear keeps the same order all draft.
+  return (S.dtype === "linear" || r % 2 === 0) ? i : TEAMS-1-i;
+}
+function myNextPickIndex(){
+  if(S.slot == null) return null;
+  for(let n = S.picks.length; n < TEAMS*ROUNDS; n++)
+    if(seatOf(n) === S.slot-1) return n;
+  return null;
+}
+function picksUntilMyTurn(){
+  const n = myNextPickIndex();
+  return n == null ? null : n - S.picks.length;
+}
+
+/* ---------- ranking ---------- */
+function rank(){
+  const lam = S.dial/100;
+  P.forEach(p => p._ce = p.ppg - lam*p.sd);
+  const repl = {};
+  ["QB","RB","WR","TE","K","DEF"].forEach(pos=>{
+    const pool = P.filter(p=>p.pos===pos).sort((a,b)=>b._ce-a._ce);
+    repl[pos] = pool[Math.min(REPL[pos],pool.length)-1]._ce;
+  });
+  P.forEach(p => p._v = (p._ce - repl[p.pos]) * GAMES * (REPEAT[p.pos]||1));
+  return P.slice().sort((a,b)=>b._v-a._v);
+}
+
+/* ---------- will he last? ----------
+   A player's real draft slot scatters around his market price. Given he is still
+   on the board at pick C, the chance he survives to pick C+N is the tail ratio
+   of that distribution. Closed form — no simulation needed.                     */
+const erf = x => { // Abramowitz & Stegun 7.1.26
+  const s = x<0?-1:1; x = Math.abs(x);
+  const t = 1/(1+0.3275911*x);
+  const y = 1 - ((((1.061405429*t - 1.453152027)*t + 1.421413741)*t
+        - 0.284496736)*t + 0.254829592)*t*Math.exp(-x*x);
+  return s*y;
+};
+const tail = (x,mu,sg) => 0.5*(1 - erf((x-mu)/(sg*Math.SQRT2)));
+function survives(p){
+  if(S.dtype === "auction") return null;
+  const n = picksUntilMyTurn();
+  if(n == null || !p.adp || n <= 0) return null;
+  const C = S.picks.length;
+  const sg = Math.max(4, 0.22*p.adp);          // market disagreement widens later
+  const now = tail(C, p.adp, sg);
+  if(now < 1e-6) return 0;
+  return Math.max(0, Math.min(1, tail(C+n, p.adp, sg)/now));
+}
+
+/* Auction pricing: split the league's spendable money across positive value.
+   14 teams x $200, minus a dollar held back for every roster spot. */
+function dollars(p){
+  const pool = P.filter(x=>x._v > 0);
+  const total = pool.reduce((a,x)=>a+x._v, 0) || 1;
+  const spend = TEAMS*200 - TEAMS*ROUNDS;
+  return p._v > 0 ? Math.max(1, Math.round(p._v/total*spend)) : 1;
+}
+
+/* ---------- rosters, mine and theirs ---------- */
+function rosterOf(keys){
+  const pool = keys.map(k=>byId[k]).filter(Boolean).sort((a,b)=>b._v-a._v);
+  const filled = [], used = new Set();
+  SLOTS.forEach(([slot,n])=>{
+    for(let i=0;i<n;i++){
+      let pick = null;
+      for(const p of pool){
+        if(used.has(id(p))) continue;
+        if(slot==="FLEX" ? FLEX_OK[p.pos] : p.pos===slot){ pick=p; break; }
+      }
+      if(pick) used.add(id(pick));
+      filled.push({slot,p:pick});
+    }
+  });
+  return {filled, bench: pool.filter(p=>!used.has(id(p)))};
+}
+function needsOf(keys){
+  const n = {QB:0,RB:0,WR:0,TE:0,K:0,DEF:0,FLEX:0};
+  rosterOf(keys).filled.forEach(f=>{ if(!f.p) n[f.slot]++; });
+  return n;
+}
+/* What the seats picking before our next turn still have to fill. */
+function demandBeforeMyTurn(){
+  const n = picksUntilMyTurn();
+  if(n == null || n <= 0) return null;
+  const seats = new Set();
+  for(let i=S.picks.length;i<S.picks.length+n;i++) seats.add(seatOf(i));
+  const tally = {QB:0,RB:0,WR:0,TE:0};
+  seats.forEach(seat=>{
+    const keys = S.picks.filter((x,i)=>seatOf(i)===seat).map(x=>x.k);
+    const nd = needsOf(keys);
+    ["QB","RB","WR","TE"].forEach(ps=>{
+      if(nd[ps] > 0 || (nd.FLEX>0 && FLEX_OK[ps])) tally[ps]++;
+    });
+  });
+  return {seats:seats.size, tally};
+}
+
+/* ---------- render ---------- */
+function render(){
+  setTeams(S.teams);
+  GONE = goneSet();
+  const ranked = rank();
+  const n = needsOf(mineKeys());
+  drawRoster(); drawScarce(ranked); drawRec(ranked, n); drawClock(); marketHeader();
+  drawTurn(); drawNag();
+
+  document.getElementById("c-picks").textContent = S.picks.length;
+  document.getElementById("c-mine").textContent  = mineKeys().length;
+  document.getElementById("c-round").textContent =
+      Math.min(ROUNDS, Math.floor(S.picks.length/TEAMS) + 1);
+
+  const lam = S.dial/100;
+  document.getElementById("dial-say").innerHTML =
+    lam < .13 ? "<b>Chase the ceiling.</b> Ranked purely on projected points, ignoring how wildly a player swings." :
+    lam < .38 ? "<b>Points first, with a nudge for reliability.</b> This is the setting that won the most simulated seasons." :
+    lam < .62 ? "<b>Balanced.</b> Costs about 1.4 points of playoff odds against the best setting." :
+    lam < .87 ? "<b>Floor first.</b> Steady scorers rise, but you give up roughly 5 points of playoff odds." :
+                "<b>Maximum safety.</b> The worst tested setting — about 9 points of playoff odds worse.";
+
+  if(S.view === "map"){ drawMap(ranked); scheduleLA(); return; }
+
+  const box = document.getElementById("board");
+  // Names carry punctuation people do not type: A.J. Brown, Ja'Marr Chase,
+  // Amon-Ra St. Brown. Strip dots and apostrophes, treat hyphens as spaces,
+  // and let the full club name match too.
+  const q = normq(S.q);
+  const list = ranked.filter(p=>{
+    if(S.pos !== "ALL" && p.pos !== S.pos) return false;
+    if(q && !searchText(p).includes(q)) return false;
+    if(S.hideGone && isGone(p) && !q) return false;
+    return true;
+  });
+
+  if(!list.length){
+    TOPMATCH = null; quickHint();
+    box.innerHTML = q
+      ? `<div class="empty-state"><b>No player called &ldquo;${esc(S.q.trim())}&rdquo;</b> in the top ${P.length}.<br>
+         A 14-team draft is ${TEAMS*ROUNDS} picks, so anyone missing here is not worth one.
+         If someone calls that name, let it go.</div>`
+      : '<div class="empty-state">Nobody matches that filter.</div>';
+    return;
+  }
+
+  TOPMATCH = list.find(p=>!isGone(p)) || null;
+  quickHint();
+  const avail = list.filter(p=>!isGone(p));
+  const span  = avail.length ? avail[0]._v - avail[avail.length-1]._v : 1;
+  const brk   = Math.max(7, span*0.055);
+  let html="", tier=0, prev=null, pend=[], tierCount=0;
+  const flush = () => { if(pend.length){
+    html += `<div class="tier">Tier ${tier}<span class="cnt">${tierCount} available</span></div>` + pend.join("");
+    pend=[]; } };
+  list.forEach(p=>{
+    if(!isGone(p)){
+      if(prev === null || prev - p._v > brk){
+        flush(); tier++; prev = p._v;
+        tierCount = avail.filter(x=>x._v <= p._v+.001 && x._v > p._v-brk).length;
+      }
+      prev = Math.min(prev, p._v);
+    }
+    pend.push(row(p));
+  });
+  flush();
+  box.innerHTML = html;
+  scheduleLA();
+}
+
+function marketHeader(){
+  const h = document.getElementById("mkt-head");
+  if(!h) return;
+  // Survival odds only mean something while you are waiting for a turn.
+  // On the clock, or in an auction, the column falls back to draft position.
+  const n = picksUntilMyTurn();
+  const live = S.dtype !== "auction" && S.slot != null && n !== null && n > 0;
+  h.textContent = live ? "Still there?" : "Usually goes";
+  h.title = live
+    ? "Chance he is still available when your next turn comes around"
+    : "The pick number he typically goes at. Set your seat to see survival odds instead.";
+}
+
+function drawClock(){
+  const el = document.getElementById("clock");
+  if(S.dtype === "auction"){
+    el.innerHTML = `<div style="font-size:12.5px;color:var(--ink2);line-height:1.45">
+      In an auction there are no seats — every player is available to you at a price.
+      The <b>Value</b> column becomes a budget guide: it is shown as dollars out of a
+      $200 cap, so never pay more than the number next to a name.</div>`;
+    return;
+  }
+  if(S.slot == null){
+    el.innerHTML = `<div style="font-size:12.5px;color:var(--ink3)">
+      Set your seat number and the board will track every team's roster from pick order alone.</div>`;
+    return;
+  }
+  const n = picksUntilMyTurn();
+  const d = demandBeforeMyTurn();
+  if(n === null){ el.innerHTML = `<div style="font-size:13px">Your draft is done.</div>`; return; }
+  let h = n === 0
+    ? `<div class="onclock">You are on the clock</div>`
+    : `<div style="font-size:13px"><b class="num">${n}</b> pick${n>1?"s":""} until your turn</div>`;
+  if(d && d.seats){
+    const hot = Object.entries(d.tally).filter(([,c])=>c>0).sort((a,b)=>b[1]-a[1]);
+    if(hot.length) h += `<div class="demand">Of the ${d.seats} team${d.seats>1?"s":""} picking before you: ` +
+      hot.map(([ps,c])=>`<b>${c}</b> need ${ps}`).join(", ") + `.</div>`;
+  }
+  el.innerHTML = h;
+}
+
+/* The 2025 column says something different depending on what we actually know,
+   and it should never imply more than that. Four honest states:
+     - a full week-by-week record   -> 17 cells, green for great, red for bad
+     - measured but only across 3yr -> a reliability bar, no week detail claimed
+     - a rookie                     -> nothing measured at all
+     - kicker or defense            -> no published table anywhere; estimated  */
+function strip(p){
+  if(p.estimated) return `<div class="strip unknown">${'<i></i>'.repeat(17)}</div>
+      <div class="strip-note">estimated &mdash; not measured</div>`;
+  if(p.span === "3yr"){
+    const pct = Math.max(4, Math.min(100, p.rely));
+    return `<div class="relbar"><span style="width:${pct}%"></span></div>
+      <div class="strip-note">steadiness over 3 seasons &middot; missed 2025</div>`;
+  }
+  if(!p.proven) return `<div class="strip unknown">${'<i></i>'.repeat(17)}</div>
+      <div class="strip-note">${p.rookie ? "2026 rookie" : "no fantasy role in 2025"}</div>`;
+  let out="";
+  for(let i=0;i<17;i++) out += `<i class="${i<p.star?'boom':(i>=17-p.stiff?'bust':'')}"></i>`;
+  return `<div class="strip">${out}</div>
+    <div class="strip-note">${p.star} great &middot; ${p.stiff} bad</div>`;
+}
+
+function row(p){
+  const k = id(p), mine = isMine(p), gone = GONE.has(k) && !mine;
+  const cls = "row" + (mine?" mine":"") + (gone?" gone":"");
+  let mkt = p.adp ? `<span class="adp-raw">${p.adp.toFixed(0)}</span>` : "—";
+  if(!GONE.has(k)){
+    const sv = survives(p);
+    if(sv !== null){
+      const c = sv > .8 ? "safe" : sv > .45 ? "maybe" : "risky";
+      mkt = `<span class="surv ${c}">${Math.round(sv*100)}%</span>`;
+    }
+  }
+  return `<div class="${cls}" data-k="${esc(k)}">
+    <div class="rk num">${p._rank||""}</div>
+    <div class="who">
+      <span class="pos ${p.pos}">${p.pos}</span>
+      <span class="nmwrap"><div class="nm">${esc(p.name)}</div><div class="tm">${esc(teamName(p.team))}</div></span>
+    </div>
+    <div class="val num">${S.dtype==="auction" ? "$"+dollars(p) : p._v.toFixed(0)}</div>
+    <div class="strip-cell">${strip(p)}</div>
+    <div class="pts num">${p.pts.toFixed(0)}</div>
+    <div class="adp-cell num">${mkt}</div>
+    ${S.open === k ? detail(p, mine, gone) : ""}
+  </div>`;
+}
+
+function detail(p, mine, gone){
+  const notes = (p.notes||[]).map(t=>`<div class="note">${esc(t)}</div>`).join("");
+  const s = survives(p);
+  const survLine = s === null ? "" :
+    `<div class="note" style="border-left-color:${s>.8?'var(--good)':s>.45?'var(--warn)':'var(--bad)'}">
+      About <b>${Math.round(s*100)}%</b> likely to still be available when your next turn comes around.
+      ${s>.8?"You can comfortably wait.":s>.45?"Close to a coin flip.":"If you want him, it has to be now."}</div>`;
+  return `<div class="detail">
+    <div class="stat">
+      <span>Projected <b>${p.pts.toFixed(0)} pts</b> (${p.ppg.toFixed(1)}/wk)</span>
+      <span>Typical swing <b>&plusmn;${p.sd.toFixed(1)}</b>/wk</span>
+      ${p.proven?`<span>${p.span==="3yr"?"2023-25":"2025"} average <b>${p.ppg25.toFixed(1)}</b>/wk</span>`:""}
+      ${p.adp?`<span>Usually goes at pick <b>${p.adp.toFixed(0)}</b></span>`:""}
+    </div>
+    <div style="font-size:12.5px;color:var(--ink3)">${esc(p.detail)}</div>
+    ${survLine}${notes}
+    <div class="acts" style="justify-content:flex-start;margin-top:3px">
+      <button class="mine-btn" data-act="mine">${mine?"On my team ✓":"+ Draft to my team"}</button>
+      <button data-act="gone">${gone?"Undo":"Someone took him"}</button>
+    </div>
+  </div>`;
+}
+
+function drawRoster(){
+  const {filled,bench} = rosterOf(mineKeys());
+  let h = filled.map(f=>`<div class="slot ${f.p?"":"empty"}">
+      <span class="lbl">${f.slot}</span>
+      <span class="nm">${f.p?esc(f.p.name):"—"}</span>
+      ${f.p?`<button class="drop" data-drop="${esc(id(f.p))}" title="Remove">&times;</button>`:""}
+    </div>`).join("");
+  bench.forEach(p=>{ h += `<div class="slot"><span class="lbl">Bench</span>
+      <span class="nm">${esc(p.name)}</span>
+      <button class="drop" data-drop="${esc(id(p))}" title="Remove">&times;</button></div>`; });
+  if(!mineKeys().length) h = `<div style="font-size:13px;color:var(--ink3);margin-bottom:6px">
+      Nobody yet. Click a player, then <em>Draft to my team</em>.</div>` + h;
+  document.getElementById("roster").innerHTML = h;
+}
+
+function drawScarce(ranked){
+  document.getElementById("scarce").innerHTML = ["RB","WR","TE","QB"].map(pos=>{
+    const left = ranked.filter(p=>p.pos===pos && !isGone(p) && p._v > 0).length;
+    const cap  = REPL[pos];
+    const pct  = Math.max(3, Math.min(100, left/cap*100));
+    const col  = left <= cap*0.22 ? "var(--bad)" : left <= cap*0.5 ? "var(--warn)" : `var(--${pos.toLowerCase()})`;
+    return `<div class="sc-row"><span class="pos ${pos}" style="width:26px">${pos}</span>
+      <span class="sc-bar"><span class="sc-fill" style="width:${pct}%;background:${col}"></span></span>
+      <span class="sc-n num">${left}</span></div>`;
+  }).join("");
+}
+
+function drawRec(ranked, n){
+  const avail = ranked.filter(p=>!isGone(p));
+  const picked = S.picks.length, round = Math.floor(picked/TEAMS)+1;
+  const el = document.getElementById("rec");
+  if(!avail.length || mineKeys().length >= ROUNDS){
+    el.innerHTML = `<div class="rec-k">Draft complete</div>
+      <div class="rec-main"><span class="nm">You're done</span></div>
+      <div class="rec-why">Check the waiver wire every Tuesday. That is where the rest of the edge lives.</div>`;
+    return;
+  }
+  const need = p => {
+    if(LATE[p.pos]) return round >= 14 ? 1.6 : 0.04;
+    if(n[p.pos] > 0) return 1;
+    if(n.FLEX > 0 && FLEX_OK[p.pos]) return .88;
+    return .62;
+  };
+  const scored = avail.map(p=>({p, s:p._v*need(p)})).sort((a,b)=>b.s-a.s);
+  // Once the simulation has played this exact position out, its answer wins:
+  // it prices positional scarcity, which the quick weighting only approximates.
+  const simmed = (S.auto && LA.res && LA.key === laKey()) ? LA.res : null;
+  const top = simmed ? P[simmed[0].i] : scored[0].p;
+  const alts = (simmed ? simmed.slice(1,4).map(r=>P[r.i])
+                       : scored.slice(1,4).map(x=>x.p)).filter(p=>p && p!==top);
+
+  const why = [];
+  if(LATE[top.pos]) why.push(`it is round ${round} and this is the right time to fill ${top.pos}`);
+  else if(n[top.pos] > 0) why.push(`you still need ${n[top.pos]>1 ? n[top.pos]+" " : "a "}${top.pos}${n[top.pos]>1?"s":""}`);
+  else if(n.FLEX > 0 && FLEX_OK[top.pos]) why.push("he fills your flex spot");
+  else why.push("he is the best player left");
+  if(top.proven && top.stiff === 0) why.push("he did not have a single bad week in 2025");
+  else if(top.proven && top.star >= 4) why.push(`he had ${top.star} big weeks last season`);
+  if(top.adp && top.adp - picked > 12) why.push(`and he usually goes around pick ${top.adp.toFixed(0)}, so he is good value here`);
+
+  let alert = "";
+  // 1. someone very good is about to disappear
+  // A player about to vanish is worth flagging, but it must not read as an order
+  // that competes with the recommendation above it. Frame it as the trade-off it is.
+  const doomed = scored.slice(0,6).map(x=>x.p)
+      .filter(p=>{ const sv=survives(p); return sv!==null && sv<0.3 && p._v>18; })
+      .filter(p=>p !== top);
+  if(doomed.length){
+    const d = doomed[0];
+    alert = simmed
+      ? `${d.name} almost certainly will not last until your next turn, while ${top.name} might. `
+        + `The simulation still prefers ${top.name} — but if you would rather own ${d.name}, now is the only chance.`
+      : `${d.name} almost certainly will not last until your next turn. `
+        + `If you would rather have him than ${top.name}, it has to be now.`;
+  }
+  // 2. positional cliff
+  if(!alert) for(const pos of ["RB","WR","TE"]){
+    if(!n[pos] && !(n.FLEX && FLEX_OK[pos])) continue;
+    const left = avail.filter(p=>p.pos===pos && p._v>0).length;
+    if(left > 0 && left <= 4){
+      alert = `Only ${left} startable ${pos}${left>1?"s":""} left in the entire pool. If you need one, this is the last comfortable moment.`; break;
+    }
+  }
+  // 3. a run is under way
+  if(!alert){
+    const runs = S.picks.slice(-8).map(x=>byId[x.k]).filter(Boolean);
+    if(runs.length >= 6){
+      const c = {}; runs.forEach(p=>c[p.pos]=(c[p.pos]||0)+1);
+      const hot = Object.entries(c).sort((a,b)=>b[1]-a[1])[0];
+      if(hot && hot[1] >= 5) alert = `${hot[0]} run in progress — ${hot[1]} of the last ${runs.length} picks.`;
+    }
+  }
+  // 4. too much of one NFL team ties your weeks together
+  if(!alert){
+    const t = {}; mineKeys().map(k=>byId[k]).filter(Boolean)
+      .forEach(p=>{ if(!LATE[p.pos]) t[p.team]=(t[p.team]||0)+1; });
+    const stack = Object.entries(t).find(([,c])=>c>=3);
+    if(stack) alert = `You have ${stack[1]} starters from the ${teamName(stack[0])}. Their good and bad weeks arrive together, which widens your weekly swing.`;
+  }
+
+  el.innerHTML = `
+    <div class="rec-k">${simmed ? "Take him now &middot; simulated" : "Take him now"}</div>
+    <div class="rec-main">
+      <span class="nm">${esc(top.name)}</span>
+      <span class="pos ${top.pos}" style="width:auto;padding:2px 7px">${top.pos}</span>
+      <span style="color:var(--ink3);font-size:13px">${esc(teamName(top.team))} &middot; ${top.pts.toFixed(0)} projected pts</span>
+    </div>
+    <div class="rec-why">Because ${why.join(", ")}.${simmed && simmed.length>1
+      && (simmed[0].ev-simmed[1].ev) < 20
+      ? ` <span style="color:var(--ink3)">${esc(P[simmed[1].i].name)} came out close enough that
+          the two are effectively tied — either is fine.</span>` : ""}</div>
+    ${alert?`<div class="alert">${esc(alert)}</div>`:""}
+    <div class="rec-alt"><span style="color:var(--ink3)">Or:</span>
+      ${alts.map(p=>`<b>${esc(p.name)}</b> <span style="color:var(--ink3)">${p.pos}</span>`).join(" &nbsp;·&nbsp; ")}</div>`;
+}
+
+function drawMap(ranked){
+  const avail = ranked.filter(p=>!isGone(p) && !LATE[p.pos] && (S.pos==="ALL"||p.pos===S.pos)).slice(0,70);
+  if(!avail.length){ document.getElementById("scatter").innerHTML =
+    '<div class="empty-state">Nothing left to plot.</div>'; return; }
+  const W=760,H=460,M={t:16,r:16,b:46,l:52};
+  const xs=avail.map(p=>p.pts);
+  const x0=Math.min(...xs)-8,x1=Math.max(...xs)+8;
+  const X=v=>M.l+(v-x0)/(x1-x0)*(W-M.l-M.r);
+  const Y=v=>H-M.b-(v/100)*(H-M.t-M.b);
+  let g="";
+  for(let i=0;i<=4;i++){const v=i*25;
+    g+=`<line x1="${M.l}" y1="${Y(v)}" x2="${W-M.r}" y2="${Y(v)}" stroke="var(--line-soft)"/>
+        <text class="sc-lbl" x="${M.l-8}" y="${Y(v)+3}" text-anchor="end">${v}</text>`;}
+  const dots=avail.map(p=>`<g class="sc-dot" data-k="${esc(id(p))}">
+      <circle cx="${X(p.pts)}" cy="${Y(p.rely)}" r="5.5" fill="var(--${p.pos.toLowerCase()})" opacity=".85">
+        <title>${esc(p.name)} · ${p.pos} · ${p.pts.toFixed(0)} pts · reliability ${p.rely}</title></circle>
+      ${p._v>40?`<text class="sc-lbl" x="${X(p.pts)+8}" y="${Y(p.rely)+3}">${esc(p.name.split(" ").slice(-1)[0])}</text>`:""}
+    </g>`).join("");
+  document.getElementById("scatter").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img"
+      aria-label="Projected points against week-to-week reliability">${g}${dots}
+    <text class="sc-axis" x="${M.l+(W-M.l-M.r)/2}" y="${H-10}" text-anchor="middle">Projected season points →</text>
+    <text class="sc-axis" transform="rotate(-90 14 ${M.t+(H-M.t-M.b)/2})" x="14"
+      y="${M.t+(H-M.t-M.b)/2}" text-anchor="middle">Reliability →</text></svg>`;
+}
+
+let PENDING = null;
+
+/* Whose pick is next. Because picks are logged in order and we know your seat,
+   the board can work this out itself — so ownership stops depending on you
+   remembering to hold Shift, and opponent rosters stay consistent with yours. */
+function turnSeat(){
+  return (S.slot != null && S.dtype !== "auction") ? seatOf(S.picks.length) : null;
+}
+function isMyTurn(){ const t = turnSeat(); return t !== null && t === S.slot-1; }
+
+function commitPick(k, mine){
+  S.picks = S.picks.filter(x=>x.k !== k);
+  S.picks.push({k, mine});
+  PENDING = null; S.q = ""; S.open = null;
+  const q = document.getElementById("q");
+  if(q){ q.value = ""; q.focus(); }
+  save(); render();
+}
+/* wantMine is a request, not a command: if it contradicts whose turn it is,
+   hold the pick and ask rather than silently corrupting the board. */
+function claimPick(k, wantMine){
+  const t = turnSeat();
+  if(t === null){ commitPick(k, !!wantMine); return; }
+  const mineTurn = t === S.slot-1;
+  if(wantMine && !mineTurn){ PENDING = {k, seat:t+1}; render(); return; }
+  commitPick(k, mineTurn || !!wantMine);
+}
+function drawTurn(){
+  const el = document.getElementById("entry-turn");
+  if(!el) return;
+  const t = turnSeat(), n = S.picks.length + 1;
+  if(t === null){
+    el.className = "entry-turn none";
+    el.innerHTML = `<span class="tn">Pick ${n}</span>`;
+    return;
+  }
+  if(n > TEAMS*ROUNDS){
+    el.className = "entry-turn none";
+    el.innerHTML = `<span class="tn">Draft over</span>`;
+    return;
+  }
+  const mineTurn = t === S.slot-1;
+  el.className = "entry-turn" + (mineTurn ? " yours" : "");
+  el.innerHTML = `<span class="tn">Pick ${n}</span>` +
+    `<span class="ts">${mineTurn ? "yours" : "seat " + (t+1)}</span>`;
+}
+function drawNag(){
+  const el = document.getElementById("nag");
+  if(!el) return;
+  if(!PENDING){ el.hidden = true; el.innerHTML = ""; return; }
+  const p = byId[PENDING.k];
+  el.hidden = false;
+  el.innerHTML = `<span>It is <b>seat ${PENDING.seat}</b>'s pick, not yours.
+      Put ${esc(p ? p.name : "him")} on your team anyway?</span>
+    <span class="nag-acts">
+      <button data-nag="yes">Yes, he's mine</button>
+      <button data-nag="no">Cancel</button>
+    </span>`;
+}
+function quickHint(){
+  const el = document.getElementById("qhint");
+  if(!el) return;
+  if(PENDING){ el.innerHTML = ""; return; }
+  if(!S.q.trim()){
+    el.innerHTML = turnSeat() === null
+      ? `<span class="qdim">Set your seat in the left panel and the board will work out whose pick each one is.</span>`
+      : (isMyTurn()
+        ? `<span class="qgo">Your pick — whoever you enter goes onto your team.</span>`
+        : `<span class="qdim">Enter logs this pick for seat ${turnSeat()+1}. Shift+Enter claims him for you.</span>`);
+    return;
+  }
+  if(!TOPMATCH){ el.innerHTML = `<span class="qmiss">No match — nothing will be logged.</span>`; return; }
+  const mineTurn = isMyTurn();
+  el.innerHTML = `<b>Enter</b> = ${esc(TOPMATCH.name)}` +
+    (mineTurn ? ` onto <b>your team</b>` : ` to seat ${turnSeat() === null ? "?" : turnSeat()+1}`) +
+    (mineTurn ? "" : ` &nbsp;·&nbsp; <b>Shift+Enter</b> = he's mine`);
+}
+
+
+/* ---------- look-ahead: play the rest of the draft out ----------
+   The static board ranks players in isolation. This asks the question that
+   actually matters at your turn: if I take THIS player, how good is my whole
+   starting lineup once the draft finishes? It plays the remaining picks out
+   many times — opponents drafting off the market with noise, us drafting
+   greedily at our own turns — and averages the finished roster. That prices
+   scarcity properly: taking the last good tight end can beat taking a better
+   receiver, because the receiver's replacement is far cheaper. */
+let gaussSpare = null;
+function gauss(){
+  if(gaussSpare !== null){ const g = gaussSpare; gaussSpare = null; return g; }
+  let u=0,v=0,sq=0;
+  do{ u=Math.random()*2-1; v=Math.random()*2-1; sq=u*u+v*v; }while(sq>=1||sq===0);
+  const f = Math.sqrt(-2*Math.log(sq)/sq);
+  gaussSpare = v*f; return u*f;
+}
+function countOf(idxs){
+  const c={QB:0,RB:0,WR:0,TE:0,K:0,DEF:0};
+  idxs.forEach(i=>c[P[i].pos]++); return c;
+}
+function needWeight(p, c, round){
+  if(LATE[p.pos]) return round >= 14 ? 1.6 : 0.04;
+  if(c[p.pos] < STARTERS[p.pos]) return 1;
+  const flexUsed = (c.RB-STARTERS.RB) + (c.WR-STARTERS.WR) + (c.TE-STARTERS.TE);
+  if(FLEX_OK[p.pos] && flexUsed < 1) return .88;
+  return .62;
+}
+function lineupValue(idxs){
+  const pool = idxs.slice().sort((a,b)=>P[b]._v-P[a]._v);
+  const used=new Set(); let tot=0;
+  SLOTS.forEach(([slot,n])=>{
+    for(let k=0;k<n;k++){
+      for(const i of pool){
+        if(used.has(i)) continue;
+        const ok = slot==="FLEX" ? FLEX_OK[P[i].pos] : P[i].pos===slot;
+        if(ok){ used.add(i); tot += P[i]._v; break; }
+      }
+    }
+  });
+  return tot;
+}
+function lookahead(cands, sims){
+  const total = TEAMS*ROUNDS, start = S.picks.length, mySeat = S.slot-1;
+  const uni = P.map((p,i)=>i)
+    .filter(i=>!GONE.has(id(P[i])))
+    .sort((a,b)=>(P[a].adp||300)-(P[b].adp||300))
+    .slice(0,170);
+  // Scanning our own options in value order lets us stop early: once even the
+  // most generous need weight cannot beat the leader, nothing below can either.
+  const byVal = uni.slice().sort((a,b)=>P[b]._v-P[a]._v);
+  const MAXW = 1.6;
+  const held = S.picks.filter(x=>x.mine)
+    .map(x=>P.findIndex(p=>id(p)===x.k)).filter(i=>i>=0);
+
+  // Common random numbers: every candidate faces the SAME simulated opponents,
+  // so differences between them are signal rather than sampling noise — and the
+  // expensive ordering work happens once instead of once per candidate.
+  const orders = [];
+  for(let s=0;s<sims;s++){
+    const perc = new Map();
+    for(const i of uni){
+      const a = P[i].adp||300;
+      perc.set(i, a + gauss()*Math.max(4,0.22*a));
+    }
+    orders.push(uni.slice().sort((x,y)=>perc.get(x)-perc.get(y)));
+  }
+
+  const out=[];
+  for(const c of cands){
+    let sum=0;
+    for(let s=0;s<sims;s++){
+      const order=orders[s], taken=new Set(), mine=held.slice();
+      taken.add(c); mine.push(c);
+      let ptr=0;
+      for(let n=start+1;n<total;n++){
+        const rnd=Math.floor(n/TEAMS)+1;
+        if(seatOf(n)===mySeat){
+          const c2=countOf(mine); let best=-1,bv=-Infinity;
+          for(const i of byVal){
+            if(P[i]._v*MAXW <= bv) break;
+            if(taken.has(i)) continue;
+            const v=P[i]._v*needWeight(P[i],c2,rnd);
+            if(v>bv){bv=v;best=i;}
+          }
+          if(best>=0){ taken.add(best); mine.push(best); }
+        }else{
+          while(ptr<order.length && taken.has(order[ptr])) ptr++;
+          if(ptr<order.length){ taken.add(order[ptr]); ptr++; }
+        }
+      }
+      sum += lineupValue(mine);
+    }
+    out.push({i:c, ev:sum/sims});
+  }
+  return out.sort((a,b)=>b.ev-a.ev);
+}
+
+/* The simulation is the better answer, so it is not hidden behind a button — it
+   runs itself whenever the draft changes. It deliberately does NOT run on every
+   render: rendering also fires on each keystroke in the search box, and half a
+   second of work per keypress would make typing unusable. So it keys off draft
+   state, debounces, and the instant estimate holds the headline until it lands. */
+let LA = {key:null, res:null, running:false, ms:0};
+let laTimer = null, laToken = 0;
+
+function laKey(){
+  return encodePicks(S.picks) + "|" + S.dial + "|" + S.slot + "|" + S.teams + "|" + S.dtype;
+}
+function laCandidates(ranked, n){
+  const round = Math.floor(S.picks.length/TEAMS) + 1;
+  const need = p => LATE[p.pos] ? (round>=14?1.6:0.04)
+    : (n[p.pos]>0 ? 1 : (n.FLEX>0 && FLEX_OK[p.pos] ? .88 : .62));
+  return ranked.filter(p=>!isGone(p))
+    .map(p=>({p, s:p._v*need(p)})).sort((a,b)=>b.s-a.s).slice(0,5)
+    .map(x=>P.indexOf(x.p));
+}
+function scheduleLA(){
+  if(!S.auto) return;
+  if(S.dtype === "auction" || S.slot == null){ paintLA(); return; }
+  const key = laKey();
+  if(LA.key === key && LA.res) return;
+  clearTimeout(laTimer);
+  const token = ++laToken;
+  LA.running = true; paintLA();
+  laTimer = setTimeout(()=>{
+    if(token !== laToken) return;
+    const ranked = rank(), n = needsOf(mineKeys());
+    const cands = laCandidates(ranked, n);
+    if(!cands.length){ LA.running=false; paintLA(); return; }
+    const t0 = performance.now();
+    const res = lookahead(cands, 140);
+    if(token !== laToken) return;
+    LA = {key, res, running:false, ms:Math.round(performance.now()-t0)};
+    drawRec(ranked, n); paintLA();
+  }, 180);
+}
+function paintLA(){
+  const el = document.getElementById("la-out");
+  if(!el) return;
+  if(!S.auto){
+    el.innerHTML = `<div class="la-note">Automatic simulation is off. The pick above is the
+      fast estimate.</div>
+      <div style="margin-top:8px"><button id="la-once" class="la-btn">Simulate this pick once</button></div>`;
+    const b = document.getElementById("la-once");
+    if(b) b.addEventListener("click", ()=>{ const a=S.auto; S.auto=true; LA.key=null; scheduleLA(); S.auto=a; });
+    return;
+  }
+  if(S.dtype === "auction"){
+    el.innerHTML = `<div class="la-note">Auctions have no pick order to play out. Use the
+      dollar figures in the Value column instead.</div>`; return;
+  }
+  if(S.slot == null){
+    el.innerHTML = `<div class="la-note">Set your seat above and this will run by itself after
+      every pick.</div>`; return;
+  }
+  if(LA.running || LA.key !== laKey()){
+    el.innerHTML = `<div class="la-note working">Playing the rest of the draft out&hellip;</div>`;
+    return;
+  }
+  if(!LA.res){ el.innerHTML = ""; return; }
+  // Projections carry ~8% error, which reshuffles anything inside ~20 points of
+  // finished lineup. So the honest output is a GROUP of defensible picks and a
+  // line under it, not a false ranking of five near-identical options.
+  const TIE = 20;
+  const best = LA.res[0].ev;
+  const tied = LA.res.filter(r => best - r.ev <= TIE);
+  const behind = LA.res.filter(r => best - r.ev > TIE);
+  const name = i => esc(P[i].name);
+
+  const verdict = tied.length === 1
+    ? `<b>${name(LA.res[0].i)} is the clear pick</b> — the next option is
+       ${Math.round(best - LA.res[1].ev)} points of finished lineup behind.`
+    : `<b>${tied.length} picks are effectively tied.</b> Take whichever you prefer —
+       the simulation cannot separate them, and pretending otherwise would be false
+       precision.${behind.length ? ` ${behind.length === 1 ? name(behind[0].i) + " is" :
+       "The rest are"} measurably worse.` : ""}`;
+
+  const rowFor = (r, k) => {
+    const p = P[r.i], d = r.ev - best;
+    return `<div class="la-row${k===0?' win':''}${best-r.ev<=TIE?' tied':''}">
+      <span class="pos ${p.pos}">${p.pos}</span>
+      <span class="la-nm">${esc(p.name)}</span>
+      <span class="la-ev num">${k===0 ? 'best' : d.toFixed(0)}</span>
+    </div>`;
+  };
+
+  el.innerHTML =
+    `<div class="la-verdict">${verdict}</div>` +
+    `<div class="la-rows">` +
+      (tied.length > 1 ? `<div class="la-group">any of these</div>` : ``) +
+      tied.map((r,k)=>rowFor(r,k)).join("") +
+      (behind.length ? `<div class="la-group behind">clearly behind</div>` : ``) +
+      behind.map(r=>rowFor(r, tied.length)).join("") +
+    `</div>
+    <div class="la-note">Numbers are points of finished starting lineup behind the leader,
+      after playing the rest of the draft out ${140} times per option (${LA.ms}ms).</div>`;
+}
+
+/* ---------- keeping the draft safe ----------
+   localStorage is the primary store, but one cleared cache mid-draft would be a
+   disaster. So the pick list is also mirrored into the URL itself: every pick
+   rewrites the address bar, which means a refresh, a crash, a bookmark, or
+   pasting the link onto your phone all recover the draft. Twelve bits per pick
+   (eleven for the player, one for whose team he is on) keeps the URL short. */
+const B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+const IDX = new Map(P.map((p,i)=>[id(p),i]));
+function encodePicks(picks){
+  let out = "";
+  for(const x of picks){
+    const i = IDX.get(x.k); if(i === undefined) continue;
+    const v = (i << 1) | (x.mine ? 1 : 0);
+    out += B64[(v >> 6) & 63] + B64[v & 63];
+  }
+  return out;
+}
+function decodePicks(str){
+  const out = [];
+  for(let n = 0; n + 1 < str.length; n += 2){
+    const hi = B64.indexOf(str[n]), lo = B64.indexOf(str[n+1]);
+    if(hi < 0 || lo < 0) continue;
+    const v = (hi << 6) | lo, i = v >> 1;
+    if(P[i]) out.push({k: id(P[i]), mine: !!(v & 1)});
+  }
+  return out;
+}
+function syncURL(){
+  try{
+    const h = "#d=" + encodePicks(S.picks) + "~" + S.teams + S.dtype[0] + (S.slot||0);
+    history.replaceState(null, "", location.pathname + location.search + h);
+  }catch(e){}
+}
+function restoreFromURL(){
+  const m = (location.hash||"").match(/^#d=([^~]*)~(\d+)([sla])(\d+)$/);
+  if(!m) return false;
+  const picks = decodePicks(m[1]);
+  if(picks.length < S.picks.length) return false;
+  S.picks = picks; S.teams = +m[2];
+  S.dtype = {s:"snake", l:"linear", a:"auction"}[m[3]];
+  S.slot = +m[4] || null;
+  return true;
+}
+async function copyBackup(){
+  const el = document.getElementById("bk-msg");
+  syncURL();
+  try{
+    await navigator.clipboard.writeText(location.href);
+    el.textContent = "Link copied. Paste it anywhere to restore this draft.";
+  }catch(e){
+    el.textContent = "Copy the address bar — it holds your whole draft.";
+  }
+  setTimeout(()=>{ el.textContent = ""; }, 6000);
+}
+
+
+/* ---------- events ---------- */
+const esc = s => String(s).replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const removePick = k => { S.picks = S.picks.filter(x=>x.k!==k); };
+
+document.addEventListener("click", e => {
+  const d = e.target.closest("[data-drop]");
+  if(d){ removePick(d.dataset.drop); save(); render(); return; }
+
+  const act = e.target.closest("[data-act]");
+  if(act){
+    const k = act.closest(".row").dataset.k;
+    const cur = S.picks.find(x=>x.k===k);
+    if(act.dataset.act === "mine"){
+      if(cur && cur.mine){ removePick(k); S.open=null; save(); render(); }
+      else claimPick(k, true);
+    }else{
+      if(cur && !cur.mine){ removePick(k); S.open=null; save(); render(); }
+      else claimPick(k, false);
+    }
+    return;
+  }
+
+  const nag = e.target.closest("[data-nag]");
+  if(nag){
+    if(nag.dataset.nag === "yes" && PENDING) commitPick(PENDING.k, true);
+    else { PENDING = null; render(); }
+    return;
+  }
+
+  const dot = e.target.closest(".sc-dot");
+  if(dot){ if(!S.picks.some(x=>x.k===dot.dataset.k)) claimPick(dot.dataset.k, true);
+    return; }
+
+  const r = e.target.closest(".row");
+  if(r){ S.open = S.open === r.dataset.k ? null : r.dataset.k; render(); return; }
+});
+
+document.getElementById("dial").addEventListener("input", e=>{ S.dial=+e.target.value; save(); render(); });
+document.getElementById("q").addEventListener("input", e=>{ S.q=e.target.value; render(); });
+document.getElementById("q").addEventListener("keydown", e=>{
+  if(e.key === "Enter"){ e.preventDefault(); if(TOPMATCH) claimPick(id(TOPMATCH), e.shiftKey); }
+  if(e.key === "Escape"){ S.q=""; e.target.value=""; render(); }
+});
+document.getElementById("hidegone").addEventListener("change", e=>{ S.hideGone=e.target.checked; save(); render(); });
+document.getElementById("slot").addEventListener("change", e=>{
+  const v = parseInt(e.target.value,10);
+  S.slot = (v>=1 && v<=TEAMS) ? v : null; save(); render();
+});
+document.getElementById("teamsel").addEventListener("click", e=>{
+  const b=e.target.closest("[data-teams]"); if(!b) return;
+  S.teams=+b.dataset.teams; if(S.slot > S.teams) S.slot = null;
+  syncSeg("teamsel","teams",String(S.teams)); restoreFromURL();
+setTeams(S.teams); fillSeats(); tagline();
+  save(); render();
+});
+document.getElementById("la-auto").addEventListener("change", e=>{
+  S.auto = e.target.checked; LA = {key:null,res:null,running:false,ms:0};
+  save(); render();
+});
+document.getElementById("bk-copy").addEventListener("click", copyBackup);
+document.getElementById("dtype").addEventListener("click", e=>{
+  const b=e.target.closest("[data-dtype]"); if(!b) return;
+  S.dtype=b.dataset.dtype; syncSeg("dtype","dtype",S.dtype); syncSeg("teamsel","teams",String(S.teams));
+  document.getElementById("slot").hidden = S.dtype==="auction";
+  save(); render();
+});
+document.getElementById("undo").addEventListener("click", ()=>{
+  S.picks.pop(); save(); render();
+});
+document.getElementById("posfilter").addEventListener("click", e=>{
+  const b=e.target.closest("[data-pos]"); if(!b) return;
+  S.pos=b.dataset.pos; syncSeg("posfilter","pos",S.pos); save(); render();
+});
+document.getElementById("viewtoggle").addEventListener("click", e=>{
+  const b=e.target.closest("[data-view]"); if(!b) return;
+  S.view=b.dataset.view; syncSeg("viewtoggle","view",S.view);
+  document.getElementById("listview").hidden = S.view!=="list";
+  document.getElementById("mapview").hidden  = S.view!=="map";
+  save(); render();
+});
+let UNDO = null, resetArmed = false;
+document.getElementById("reset").addEventListener("click", e=>{
+  const b = e.currentTarget;
+  if(UNDO){ S.picks = UNDO; UNDO = null; b.textContent = "Reset";
+            b.classList.remove("armed"); save(); render(); return; }
+  if(!resetArmed){
+    resetArmed = true; b.textContent = "Tap again to clear"; b.classList.add("armed");
+    setTimeout(()=>{ if(resetArmed){ resetArmed=false; b.textContent="Reset";
+      b.classList.remove("armed"); } }, 4000);
+    return;
+  }
+  resetArmed = false; UNDO = S.picks.slice(); S.picks = []; S.open = null;
+  b.textContent = "Undo clear"; b.classList.add("armed");
+  save(); render();
+});
+function syncSeg(box,attr,val){
+  document.querySelectorAll(`#${box} [data-${attr}]`).forEach(b =>
+    b.setAttribute("aria-pressed", b.dataset[attr]===val));
+}
+
+const slotSel = document.getElementById("slot");
+function fillSeats(){
+  slotSel.innerHTML = `<option value="">Seat —</option>` +
+    Array.from({length:S.teams},(_,i)=>`<option value="${i+1}">Seat ${i+1}</option>`).join("");
+  slotSel.value = (S.slot && S.slot <= S.teams) ? S.slot : "";
+}
+const tagline = () => document.querySelector(".brand .sub").textContent =
+  `${S.teams}-team \u00b7 half-PPR \u00b7 ${ROUNDS} rounds`;
+restoreFromURL();
+setTeams(S.teams); fillSeats(); tagline();
+document.getElementById("dial").value = S.dial;
+document.getElementById("q").value = S.q;
+document.getElementById("hidegone").checked = S.hideGone;
+document.getElementById("la-auto").checked = S.auto;
+syncSeg("posfilter","pos",S.pos); syncSeg("viewtoggle","view",S.view);
+syncSeg("dtype","dtype",S.dtype); syncSeg("teamsel","teams",String(S.teams));
+document.getElementById("slot").hidden = S.dtype==="auction";
+document.getElementById("listview").hidden = S.view!=="list";
+document.getElementById("mapview").hidden  = S.view!=="map";
+
+setTeams(S.teams);
+(function(){ const r = rank(); r.forEach((p,i)=>p._rank = i+1); })();
+render();
+
+</script>
+
+</body>
+</html>
